@@ -1,0 +1,1 @@
+export const DefaultPaginationLimit = 20

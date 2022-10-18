@@ -1,0 +1,105 @@
+@import "../../../styles/common.module.less";
+
+.rnd{
+    z-index: 100;
+    margin: 0px;
+    min-width: 0px;
+    position: fixed !important;
+    transition: transform 0.2s ease-in-out;
+    &[data-collapsed="true"]{
+        transform: translateX(calc( -100% + 20px)) !important;
+    }
+    &[data-collapsed="false"]{
+        transform: translate(0,0) !important;
+    }
+    &[data-hovered="true"]{
+        transform: translate(0,0) !important;
+    }
+    &[data-width-transition="true"]{
+        transition: transform 0.2s ease-in-out, width 0.2s ease-in-out !important;
+    }
+
+}
+.sidebar{
+    width: 240px;
+    border-right: 1px solid blue;
+}
+.background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: grey;
+}
+.toggle{
+    pointer-events: all;
+    outline: none;
+    border: none;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: transparent;
+}
+.list{
+    padding: 25px;
+    position: absolute;
+    top: 100px;
+    width: 100%;
+}
+.item{
+    font-family: Muli,sans-serif;
+    display: flex;
+    padding: 6px 16px;
+    margin-bottom: 6px;
+    color: #5f6065;
+    transition: @default-transition;
+    font-size: 16px;
+    font-weight: 600;
+    flex-basis: 150px;
+    min-width: 150px;
+    overflow: hidden;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 4px;
+    &:hover{
+        background: @light-grey-btn-hover-bg-color;
+    }
+    &.match{
+        background: @light-grey-btn-hover-bg-color;
+        font-weight: bold;
+    }
+}
+.nav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden auto;
+    background-color: #ffffff;
+    box-shadow: 7px 0 15px -8px rgba(0,0,0,0.1);
+}
+.hide{
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    right: -30px;
+    // opacity: 0;
+    transition: @default-transition;
+    &:hover{
+        opacity: 1;
+    }
+}
+.toggleOpen{
+    padding: 4px 4px;
+}

@@ -1,0 +1,35 @@
+.RippleButton {
+  position: relative;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+  outline: 0;
+  overflow: hidden;
+  color: #fff;
+  background-color: #8590ae;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  &:focus{
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+  }
+}
+.ripple{
+    position: absolute;
+    display: block;
+    transform: scale(0);
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    opacity: 1;
+    animation: ripple 600ms linear;
+}
+.content{
+    position: relative;
+    z-index: 10;
+}
+@keyframes ripple {
+  to {
+    transform: scale(30);
+    opacity: 0;
+  }
+}

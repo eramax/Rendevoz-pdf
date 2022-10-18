@@ -1,0 +1,47 @@
+@import "../../../../styles/default.less";
+
+.CommentInput {
+  position: relative;
+  display: flex;
+  width: 100%;
+  transition: @default-transition;
+  &.Collapse {
+    padding-right: 86px;
+  }
+  :global {
+    .ant-input {
+      height: 36px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      &:hover {
+        border-color: @default-link-color !important;
+      }
+      &:focus {
+        border-color: @default-link-color !important;
+        box-shadow: 0 0 0 2px rgba(138, 87, 235, 0.2) !important;
+      }
+    }
+  }
+}
+.SubReplySubmitButton {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  height: 36px;
+  padding: 0 10px;
+  color: @default-link-color;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: @default-transition;
+  &:hover {
+    background-color: @default-btn-hover-bg-color;
+    transition: @default-transition;
+  }
+  &.Collapse {
+    transform: scale(0);
+  }
+}

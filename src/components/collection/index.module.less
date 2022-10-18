@@ -1,0 +1,115 @@
+
+.body{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: auto;
+    width: 100%;
+    overflow-y: auto;
+    > div{
+        flex-shrink: 0;
+    }
+}
+.details{
+    position: sticky;
+    top: 80px;
+    width: 350px;
+    overflow-y: auto;
+    font-family: Muli,sans-serif;
+    padding: 0 20px;
+    .coverWrapper{
+        width: 60%;
+        padding-bottom: 79.8%;
+        position: relative;
+    }
+    .cover{
+        position: absolute;
+        inset: 0px;
+        object-fit: cover;
+        object-position: center center;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
+    .title{
+        margin-top: 10px;
+        padding: 10px 0 1px;
+        font-size: 20px;
+        font-weight: 600;
+        word-break: break-all;
+    }
+    .author{
+        padding: 3px 0;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(0,0,0,0.5);
+        margin-bottom: 30px;
+    }
+    .detailsWrapper{
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 0;
+        > span{
+            &:first-child{
+                font-size: 14px;
+                font-weight: 600;
+            }
+            &:last-child{
+                font-size: 12px;
+                font-weight: 600;
+                color: rgba(0,0,0,0.6);
+            }
+        }
+    }
+    .buttonWrapper{
+        margin-top: 30px;
+        padding: 4px 0px;
+        > button{
+            width: 50%;
+            font-size: 15px;
+            padding: 8px 24px;
+            transition: box-shadow 0.3s ease;
+            &:hover{
+                box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2) !important;
+            }
+            &:first-child{
+                background: white;
+                color: #8590ae;
+                box-shadow: none;
+                border: 1px solid #8590ae;
+                margin-right: 10%;
+            }
+            &:last-child{
+                box-shadow: none;
+                background: red;
+            }
+        }
+    }
+}
+.collectionItemName{
+    font-weight: 600;
+    font-size: 16px;
+}
+.collectionItemDetails {
+    font-size: 12px;
+}
+.collectionItemArrow {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform-origin: top;
+    transition: transform 0.3s ease;
+}
+@media screen {
+    @media (min-width: 100em){
+        .body{
+            max-width: calc(64px + 52em);
+        }
+    }
+    @media (min-width: 46em) {
+        .body{
+            max-width: calc(64px + 46em + 256px);
+            margin: 4px auto 12px;
+        }
+    }
+}

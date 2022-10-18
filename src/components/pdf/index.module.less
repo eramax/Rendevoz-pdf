@@ -1,0 +1,52 @@
+@import "../../styles/common.module.less";
+.contextMenu{
+    font-size: 14px;
+    // background-color: #fff;
+    border-radius: 2px;
+    padding: 5px;
+    width: 150px;
+    height: auto;
+    margin: 0;
+    position: absolute;
+    list-style: none;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+    z-index: 9999;
+}
+.translateResultBox{
+    width: 400px;
+}
+.viewerBox{
+    width: 100%;
+    height: calc( 100vh - 100px);
+    font-size: 16px;
+    position: relative;
+}
+.viewerLayout{
+    .iosStyleScrollBar;
+}
+.careEyes{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    background-color: rgba(204,232,207,0.2);
+    z-index: 9998;
+}
+.scrollableHeader{
+    flex-grow: 1;
+}
+.statusBar{
+    margin: 0 20px;
+    height: 100%;
+}
+.headerWrapper{
+    padding: 5px;
+    .defaultBorder
+}
+.flexColumnWrapper{
+    flex-grow: 0;
+    flex-shrink: 1;
+}

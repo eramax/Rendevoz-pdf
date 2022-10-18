@@ -1,0 +1,49 @@
+@import "../../../styles/common.module.less";
+
+.emojiContainer{
+    user-select: none;
+    transition: background 0.05s ease-in-out;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    &:hover{
+        background: rgba(55,53,47,0.08);
+    }
+}
+.emojisContainer{
+    width: 400px;
+    min-height: 200px;
+    max-height: 270px;
+    overflow: hidden auto;
+    display: flex;
+    flex-flow: wrap;
+    padding: 4;
+    .iosStyleScrollBar;
+}
+.categories{
+    overflow: auto hidden;
+    flex-wrap: nowrap;
+    padding: 4px;
+    width: 400px;
+    .iosStyleScrollBar;
+}
+.category{
+    height: 26px;
+    user-select: none;
+    cursor: pointer;
+    padding: 0 8px;
+    font-size: 12px;
+    transition: background 0.15s ease-in-out;
+    border-radius: 6px;
+    font-weight: 500;
+    &:hover{
+         background: rgba(55,53,47,0.08);
+    }
+    &.selected{
+        background: rgba(55,53,47,0.08);
+    }
+    &:not(:first-child){
+        margin-left: 4px;
+    }
+}

@@ -1,0 +1,26 @@
+@import '../../../../styles/common.module.less';
+
+.prefix{
+    color: @font-light-blue-color;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.input{
+    outline: none;
+    width: 100%;
+    min-width: 0;
+    border-radius: 6px;
+    transition: @default-transition;
+    height: 100%;
+    border: @default-border;
+    &:hover {
+        border-color: @default-link-color !important;
+        box-shadow: 0 0 0 2px rgba(138, 87, 235, 0.2) !important;
+    }
+    &:focus {
+        border-color: @default-link-color !important;
+        box-shadow: 0 0 0 2px rgba(138, 87, 235, 0.2) !important;
+    }
+}

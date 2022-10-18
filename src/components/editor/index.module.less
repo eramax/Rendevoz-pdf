@@ -1,0 +1,152 @@
+@import "../../styles/common.module.less";
+
+.inline{
+    div{
+        display: inline-block;
+    }
+    span{
+        display: inline-block;
+    }
+}
+.hole{
+    display: flex;
+    margin: 10px 0;
+    width: 100%;
+}
+.filler{
+    min-width: 1px;
+    font-size: 1em;
+    height: 1em;
+    display: inline;
+    text-indent: 0;
+    vertical-align: baseline;
+    &:first-child{
+        align-self: flex-start;
+    }
+    &:last-child{
+        align-self: flex-end;
+    }
+}
+.layout{
+    :global{
+        .flexlayout__edge_rect{
+            display: none;
+        }
+    }
+}
+
+.edgeRect{
+    display: none;
+}
+.editable{
+    overflow-y: auto;
+    height: 100%;
+    padding: 0 24px;
+    .iosStyleScrollBar;
+}
+.mindmapContainer{
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 100;
+    background-color: rgba(255,255,255,0.5);
+    &.fullScreen{
+        background-color: white;
+        position: fixed !important;
+        z-index: 1000000 !important;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    }
+}
+.DividerWrapper{
+    user-select: none;
+    position: relative;
+    width: 46px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    &:first-child{
+        display: none;
+    }
+}
+.Divider{
+    position: absolute;
+    top: 0px;
+    left: 21px;
+    width: 4px;
+    height: 100%;
+    background-color: rgba(55, 53, 47, 0.16);
+    border-radius: 999px;
+}
+.Editor{
+    .iosStyleScrollBar;
+    h1{
+        font-size: 28px;        
+    }
+    h2{
+        font-size: 24px;
+    }
+    h3{
+        font-size: 20px;
+        
+    }
+    h4{       
+        font-size: 16px; 
+    }
+    h5{
+        font-size: 15px;
+    }
+    h6{
+        font-size: 15px;
+    }
+}
+.InnerEditorWrapper{
+    *{
+        ::selection{
+            background: rgba(133, 144, 166,0.3);
+            color: unset;
+        }
+        [data-slate-spacer="true"] {
+            user-select: none;
+        }
+    }
+    &.MindmapVisible{
+        filter: blur(5px);
+        pointer-events: none;
+        z-index: 99999;
+    }
+}
+.Wrapper{
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-left: 20px;
+    padding-right: 10px;
+    position: relative;
+    .iosStyleScrollBar;
+}
+.title{
+    cursor: text;
+    word-break: break-word;
+    padding: 0 4px;
+    white-space: pre-wrap;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    min-height: 1em;
+    outline: none;
+    &[contenteditable]:empty{
+        -webkit-text-fill-color: rgba(55,53,47,0.15);
+        &::after{
+        content: attr(placeholder);
+    }
+    }
+}

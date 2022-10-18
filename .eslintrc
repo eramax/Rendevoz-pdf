@@ -1,0 +1,35 @@
+// eslint-disable-next-line no-undef
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "sourceType": "module",
+        "extraFileExtensions": [".json"],
+        "ecmaFeatures": {
+        "jsx": true
+        }
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
+    ],
+    "plugins": [
+        "@typescript-eslint",
+        "eslint-plugin-react"
+    ],
+    "rules": {
+        "semi": ["error","never"],
+        "prettier/prettier": [
+            "error",
+            {
+                "printWidth": 140,
+                "endOfLine": "auto",
+                "semi": false,
+                "singleQuote": true,
+                "trailingComma": "none",
+                "arrowParens": "avoid"
+            }
+        ]
+    }
+}

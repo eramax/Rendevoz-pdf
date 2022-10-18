@@ -1,0 +1,172 @@
+.main{
+    font-family: Muli,sans-serif;
+    flex-grow: 0;
+}
+.mainInner{
+    width: 600px;
+    >span{
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 18px;
+        color: rgba(0, 0, 0, 0.7)
+    }
+    >h1{
+        font-size: 40px;
+        font-weight: 600;
+        margin-bottom: 0px;
+    }
+    >h2{
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+}
+.continue{
+    border: 1px solid rgba(222, 203, 203, 0.3);
+    padding: 6px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    transition: background 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+    >span{
+        margin-right: 24px;
+    }
+    &:hover{
+        background: rgba(217, 217, 217, 0.3);
+    }
+}
+.cardContainer{
+    flex-flow: wrap;
+}
+.cardOuter{
+    padding-right: 10px;
+    padding-bottom: 8px;
+    flex-grow: 1;
+    flex-basis: 33.3%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.card{
+    height: 100%;
+    width: 100%;
+    background: rgba(217, 217, 217, 0.08);
+    border-radius: 6px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(222, 203, 203, 0.3);
+    padding: 4px 12px;
+    user-select: none;
+    transition: background 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.add{
+        flex-grow: 0;
+        flex-basis: 60px;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        margin-bottom: 8px;
+        >div{
+            margin-right: 0 !important;
+            color: rgba(100,100,100);
+        }
+    }
+    &.sidebar{
+        flex-grow: 1;
+        max-height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        >div{
+            margin-right: 0 !important;
+        }
+        & h4,h3{
+            margin-bottom: 0;
+        }
+        & h3{
+            font-size: 20px;
+            font-weight: 600;
+        }
+    }
+    &:hover{
+        background: rgba(217, 217, 217, 0.3);
+    }
+    cursor: pointer;
+    >div{
+        &:first-child{
+            margin-right: 10px;
+        }
+    }
+    & h3{
+        font-size: 16px;
+        overflow: hidden;
+        // max-width: 100%;
+        font-weight: 500;
+        margin-bottom: 0px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .cardDesc{
+        font-size: 12px;
+        overflow: hidden;
+        display: -webkit-box;
+        word-break: break-all;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+.sidebar{
+    font-family: Muli,sans-serif;
+    flex-basis: 300px;
+    padding-left: 40px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    .sidebarTextItem{
+        >span{
+            font-size: 14px;
+            font-weight: 600;
+            &:first-child{
+                color: grey;
+            }
+            &:last-child{
+                color: black;
+            }
+        }
+    }
+    .progress{
+        animation: progress-stripes 2s linear infinite;
+        height: 100%;
+        background-color: #8590A6;
+        background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+		background-size: 40px 40px;
+        border-radius: 10px;
+    }
+    .progressContainer{
+        position: relative;
+        border-radius: 10px;
+        margin-top: 10px;
+        height: 10px;
+        overflow: hidden;
+        z-index: 2;
+    }
+    .progressTrack{
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background-color:rgba(0, 0, 0, 0.05);
+        z-index: -1;
+    }
+}
+@keyframes progress-stripes {
+    from{
+        background-position: 40px 0;
+    }
+    to{
+        background-position: 0 0;
+    }
+}

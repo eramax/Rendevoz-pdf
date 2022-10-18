@@ -1,0 +1,47 @@
+.tabs{
+    overflow-y: auto;
+    white-space: nowrap;
+    border-bottom: 1px solid grey;
+    scrollbar-width: none;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}
+.tab{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 14px;
+    margin-right: 24px;
+    padding: 6px 0;
+    color: blue;
+    user-select: none;
+    &:hover{
+        color: black
+    }
+}
+.underline{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    width: 100%;
+    border-radius: 7px;
+    background-color: #8590ae;
+}
+.tabNav{
+    padding: 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    font-family: Muli,sans-serif;
+    font-weight: 600;
+}
+.tabPane{
+    position: relative;
+    height: 100%;
+    transition: opacity 0.5s ease-in-out;
+}

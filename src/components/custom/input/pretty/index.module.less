@@ -1,0 +1,70 @@
+@import "../../../../styles/common.module.less";
+
+.LoginInput {
+    font-size: 14px;
+    cursor: text;
+    position: relative;
+    display: flex;
+    width: 100%;
+    transition: @default-transition;
+    height: 52px;
+    border-bottom: @default-border;
+    outline: none;
+    &:hover {
+    border-bottom: 1px solid @default-link-color;
+    }
+    &.focused{
+        border-bottom: 1px solid @default-link-color;
+    }
+}
+.Input{
+    position: relative;
+    margin-top: 1em;
+    line-height: 1.533em;
+    padding: 0.733em 0 0.533em;
+    border: none;
+    font-size: 1.2em;
+    outline: none;
+    box-shadow: none !important;
+    z-index: 200;
+    background-color: transparent;
+    width: 100%;
+    color: @font-heavy-blue-color;
+    font-weight: 500;
+    .iosStyleScrollBar;
+    :global{
+        .ant-input{
+            border: none !important;
+            
+        }
+    }
+}
+.DisplayText{
+    z-index: 100;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    -webkit-box-pack: justify;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    flex-direction: row;
+    .Text{
+        transition: @default-transition;
+        padding: 1.4em 0 0;
+        font-size: 1.06em;
+        line-height: 1.533em;
+        color: @font-light-blue-color;
+        &.Small{
+            color: @default-link-violet-color;
+            transition: all .15s ease-in-out;
+            padding-top: 0.5em;
+            line-height: 1em;
+            font-size: small;
+        }
+    }
+}
+.markdown{
+    width: 100%;
+}

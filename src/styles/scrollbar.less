@@ -1,0 +1,32 @@
+.iosStyleScrollBar{
+    &::-webkit-scrollbar{
+        width: 7px;
+        border-radius: 6px;
+    }
+    &::-webkit-scrollbar-track{
+        border-radius: 6px;
+        background-color: white;
+    }
+    &::-webkit-scrollbar-thumb{
+        cursor: pointer;
+        background: lightgray;
+        border-radius: 6px;
+        // box-shadow: rgba(255, 255, 255, 0.3) 0 0 0 1px;
+    }
+    &::-webkit-scrollbar:horizontal{
+        height: 5px;
+        background-color: white;
+    }
+    &::-webkit-scrollbar-thumb:horizontal{
+        cursor: pointer;
+        background: lightgray;
+        border-radius: 6px;
+    }
+}
+.slimIosStyleScrollBar{
+    .iosStyleScrollBar;
+    &::-webkit-scrollbar{
+        width: 3px;
+        border-radius: 6px;
+    }
+}

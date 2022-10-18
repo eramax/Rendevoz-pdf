@@ -1,0 +1,14 @@
+.selectedEmpty{
+    position: relative;
+    &::after{
+        content: 'Input or use "/" to open menu';
+        color: #aaa;
+        cursor: text;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        user-select: none;
+        pointer-events: none;
+        white-space: nowrap;
+    }
+}

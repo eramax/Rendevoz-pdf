@@ -1,0 +1,39 @@
+.ColumnListBlock{
+    width: 100%;
+    align-self: center;
+    max-width: 800px;
+    display: flex;
+    position: relative;
+}
+.ParagraphBlock{
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+    word-break: break-all;
+    padding: 3px 2px;
+}
+.HeadingBlock{
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+    margin-top: 2em;
+    margin-bottom: 4px;
+    &:first-child{
+        margin-top: 0;
+    }
+}
+.ColumnBlock{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: width 1s ease-out;
+}
+.ColumnDivider{
+    position: relative;
+    width: 40px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    &:first-child{
+        display: none;
+    }
+}

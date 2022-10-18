@@ -1,0 +1,29 @@
+.fold{
+    outline: none;
+}
+.extra{
+    opacity: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: -5px;
+    transform: translateX(-100%);
+    top: 0;
+    bottom: 0;
+    font-size: 14px;
+    transition: all 0.5s;
+    font-weight: normal;
+    &.folded{
+        opacity: 1;
+    }
+}
+.heading{
+    position: relative;
+    margin: 0;
+    &:hover{
+        .extra{
+            opacity: 1;
+        }
+    }
+}

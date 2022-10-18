@@ -1,0 +1,36 @@
+@import "../../../styles/common.module.less";
+.selectContainer{
+    padding: 4px 0px;
+    cursor: pointer;
+    max-width: 300px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-bottom: @default-border;
+    transition: @default-transition;
+    height: 34px;
+    &:hover{
+        border-bottom: 1px solid @default-link-color;
+    }
+    &.focused{
+        border-bottom: 1px solid @default-link-color;
+    }
+    &.disabled{
+        cursor: not-allowed;
+        border-bottom: none;
+    }
+}
+.placeholder{
+    color: @font-light-blue-color;
+}
+.tag{
+    padding: 3px 0px;
+    color: @font-light-blue-color;
+    // background-color: #A7BBC7;
+    border-radius: 4px;
+    margin-right: 7px;
+    > span{
+        line-height: 1;
+        margin: 3px 4px 3px 0px;
+    }
+}

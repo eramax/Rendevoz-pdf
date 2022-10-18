@@ -1,0 +1,37 @@
+@import "../../../styles/common.module.less";
+
+.breadcrumb{
+    color: @font-light-blue-color;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    ol{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        > div{
+            margin-right: 5px;
+            &:last-child{
+                .separator{
+                    display: none;
+                }
+            }
+        }
+    }
+
+}
+.separator{
+    margin-left: 4px;
+    color: @font-light-blue-color;
+}
+.item{
+    color: @font-light-blue-color;
+    transition: @default-transition;
+    cursor: pointer;
+    &:hover{
+        color: @font-light-grey-color;
+    }
+}

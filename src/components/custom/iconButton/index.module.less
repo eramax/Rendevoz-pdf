@@ -1,0 +1,51 @@
+.defaultClickableIcon{
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  transition: all 0.4s ease-in;
+  border-radius: 50%;
+  span {
+    position: relative;
+  }
+  // &:hover{
+  //   background-color: rgba(0,0,0,0.05);
+  // }
+  &:before {
+    content: '';
+    border: 1px black solid;
+    background-color: transparent;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: scale(0);
+  }
+  &.active {
+    outline: 0;
+    &:before {
+      animation: effect_dylan 0.8s ease-out;
+    }
+}
+}
+@keyframes effect_dylan {
+  50% {
+    transform: scale(1.2, 1.2);
+    opacity: 0;
+  }
+  99% {
+    transform: scale(0.001, 0.001);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.001, 0.001);
+    opacity: 1;
+  }
+}

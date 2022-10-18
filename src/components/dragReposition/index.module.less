@@ -1,0 +1,51 @@
+.ColumnListBlock{
+    width: 100%;
+    align-self: center;
+    max-width: 800px;
+    display: flex;
+    position: relative;
+}
+.ParagraphBlock{
+    width: 100%;
+    max-width: 800px;
+    padding-top: 1.4em;
+    position: relative;
+}
+.ColumnBlock{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.ColumnDivider{
+    position: relative;
+    width: 40px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    &:first-child{
+        display: none;
+    }
+}
+.DividerWrapper{
+    user-select: none;
+    position: relative;
+    width: 46px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    &:first-child{
+        display: none;
+    }
+    &:hover{
+        opacity: 1;
+        cursor: col-resize;
+    }
+}
+.Divider{
+    position: absolute;
+    top: 0px;
+    left: 21px;
+    width: 4px;
+    height: 100%;
+    background-color: rgba(55, 53, 47, 0.16);
+}

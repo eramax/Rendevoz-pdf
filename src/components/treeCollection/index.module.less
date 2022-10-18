@@ -1,0 +1,30 @@
+.item{
+    transition: background 0.3s ease, border 0.3s ease;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 4px;
+    user-select: none;
+    cursor: pointer;
+    &.isOver{
+        border: 1px solid #8590ae;
+        background: #8590aea8;
+    }
+}
+.draggingElementContainer{
+    border-radius: 4px;
+    background: white;
+    opacity: 0.8;
+}
+.draggingIndicator{
+
+}
+.icon{
+    position: absolute !important;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.2s ease;
+    &.collapsed{
+        transform: translateY(-50%) rotate(90deg);
+    }
+}

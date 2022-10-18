@@ -1,0 +1,19 @@
+.titleBar{
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    user-select: none;
+    z-index: 100000;
+    height: 30px;
+    padding-right: 20px;
+    > div{
+        -webkit-app-region: no-drag;
+    }
+}
+.icon{
+    padding: 6px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+    &:hover{
+        background: rgba(0,0,0,0.08);
+    }
+}

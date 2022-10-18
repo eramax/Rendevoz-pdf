@@ -1,0 +1,18 @@
+.pageLayer{
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    &::after{
+        position: absolute;
+        right: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        box-shadow: rgba(149, 157, 165, 0.4) 0px 4px 24px -9px;
+        pointer-events: none;
+    }
+}

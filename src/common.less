@@ -1,0 +1,143 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  &::-webkit-scrollbar{
+        width: 7px;
+        border-radius: 6px;
+    }
+  &::-webkit-scrollbar-track{
+        border-radius: 6px;
+        background-color: white;
+    }
+    &::-webkit-scrollbar-thumb{
+        cursor: pointer;
+        background: lightgray;
+        border-radius: 6px;
+        // box-shadow: rgba(255, 255, 255, 0.3) 0 0 0 1px;
+    }
+    &::-webkit-scrollbar:horizontal{
+        height: 5px;
+        background-color: white;
+    }
+    &::-webkit-scrollbar-thumb:horizontal{
+        cursor: pointer;
+        background: lightgray;
+        border-radius: 6px;
+    }
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+:global {
+  .loading {
+    width: 30px;
+    height: 30px;
+    .verticalLevelCenter;
+  }
+}
+
+.verticalCenter {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%)
+}
+.levelCenter {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0)
+}
+.verticalLevelCenter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%)
+}
+.flexWrapper{
+  display: flex;
+}
+.flexColumnWrapper{
+  display: flex;
+  flex-direction: column;
+}
+.verticalCenterFlex {
+  display: flex;
+  align-items: center;
+}
+.levelCenterFlex {
+  display: flex;
+  justify-content: center;
+}
+.verticalLevelCenterFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.overflowEllipsis {
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.pName {
+  font-size: 15px;
+  color: #000000;
+  margin-top: 10px;
+  padding-left: 9px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  height: 25px;
+  line-height: 25px;
+  z-index: 99;
+}
+.pDesc {
+  padding-left: 9px;
+  font-size: 13px;
+  color: #999999;
+  margin-bottom: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 99;
+}
+
+.rendevoz-input{
+  position: relative;
+  white-space: nowrap;
+  outline: none;
+  color: #333;
+  border: none;
+  width: 100%;
+  background-color: transparent;
+  padding: 1px 2px;
+  font-size: 14px;
+  line-height: 22px;
+}
+.rendevoz-placeholder{
+  font-size: 14px;
+  line-height: 22px;
+  padding: 1px 2px;
+  color: #333;
+}
+.rendevoz-underline{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    width: 100%;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    background-color: #8590ae;
+}
+@font-face{
+  font-family: Muli;
+  src: url('/Muli.ttf');
+}

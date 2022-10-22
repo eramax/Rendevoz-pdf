@@ -94,12 +94,10 @@ const useCollectionStore = () => {
     }
   }
   const addDocumentToCollection = async (documentId: number, collectionId: number) => {
-    const temp = new Map(collections)
-    const collection = get(collectionId, temp) || (await database.get(collectionId))
+    const collection = get(collectionId, collections) || (await database.get(collectionId))
     collection?.documents.push(documentId)
     collection.updatedAt = Date.now()
-    add(collection, temp)
-    setCollections(temp)
+    setCollections(add(collection, collections))
     database.put(collection, collectionId)
   }
 

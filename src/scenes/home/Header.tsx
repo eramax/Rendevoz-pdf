@@ -35,10 +35,6 @@ const Header = () => {
 const Bar = () => {
   return (
     <Content className={styles.bar} flex alignItems="center">
-      {/* <div className={styles.search}>
-        <Icon name="park-search" />
-        <input placeholder="Search" />
-      </div> */}
       <div className={styles.plus}>
         <IconWithPopover
           name="park-plus"

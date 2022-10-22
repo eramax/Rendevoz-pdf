@@ -8,6 +8,7 @@ import { AnimatePresence, motion, PanInfo, useDragControls } from 'framer-motion
 import styles from './index.module.less'
 import { Content } from '@/components'
 import { useGlobalLocation } from '@/routes/globalLocation'
+import SearchDialog from '@/components/dialogs/SearchDialog/SearchDialog'
 
 export const HomePage: FC = () => {
   const location = useGlobalLocation()

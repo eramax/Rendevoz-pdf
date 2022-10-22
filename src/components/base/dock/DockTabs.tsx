@@ -262,7 +262,6 @@ export class DockTabs extends React.PureComponent<Props, any> {
     if (animated == null) {
       animated = true
     }
-    console.log(this.props.panelData)
     this.updateTabs(tabs)
 
     const children: React.ReactNode[] = []

@@ -13,7 +13,8 @@ import Id from '@/utils/id'
 import IconWithPopover from '../base/IconWithPopover'
 import toast from 'react-hot-toast'
 import { INote } from '~/typings/data'
-
+import { useIsomorphicLayoutEffect, useUnmount } from 'react-use'
+import { useMemoizedFn } from '@/hooks'
 
 const EditorManagerMenuPopover = ({ panel = {} as PanelData, context = {} as DockContext }) => {
   const popoverRef = useRef()
@@ -43,6 +44,7 @@ interface EditorManagerProps {
   documentId?: number
   onSave?: number
 }
+export let isEditorInitialized = false
 const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSave }) => {
   const selectedEditorRef = useSelectedEditorRef()
   const eventEmitter = useEventEmitter()
@@ -90,74 +92,8 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
     }
     layoutRef.current?.updateTab(id, newTab)
   })
-  eventHandler.on('insertTab', async data => {
-    console.log(data)
-    let id
-    if (data.id) {
-      id = data.id
-    } else {
-      id = Id.getStrId()
-    }
-    let panelId
-    if (data.panelId) {
-      panelId = data.panelId
-    } else {
-      panelId = layoutRef.current?.getGlobal().currentFocusedPanelId
-      if (panelId === undefined) {
-        panelId = layoutRef.current?.getLayout().dockbox.children[0].id
-      }
-    }
-    // we are adding a sub page,so we need to save the note first
-    if (data.parentNoteId) {
-      const subPageNote: INote = {
-        id: data.noteId,
-        parentNoteId: data.parentNoteId,
-        title: ''
-      }
-      return saveNote(subPageNote)?.then(() => {
-        const editor = defaultEditor(id, subPageNote.id)
-        layoutRef.current?.dockMove(editor, panelId, 'middle')
-        eventEmitter.emit('editor', {
-          type: 'switchTab',
-          data: {
-            tabId: id
-          }
-        })
-        return
-      })
-    }
-    if (panelId) {
-      let editor = defaultEditor(id)
-      const noteId = data.noteId
-      if (noteId && !data.isNew) {
-        // maybe it has been opened
-        const mayBeTargetTab = layoutRef.current?.find(String(noteId)) as TabData | null
-        if (mayBeTargetTab) {
-          eventEmitter.emit('editor', {
-            type: 'switchTab',
-            data: {
-              tabId: mayBeTargetTab.id
-            }
-          })
-          return
-        }
-        const note = await getNoteById(noteId).catch(e => {
-          return null
-        })
-        if (note) {
-          editor = defaultEditor(id, noteId, note.title)
-        } else {
-          toast.error('Target note not found!')
-        }
-      }
-      layoutRef.current?.dockMove(editor, panelId, 'middle')
-      eventEmitter.emit('editor', {
-        type: 'switchTab',
-        data: {
-          tabId: id
-        }
-      })
-    }
+  eventHandler.on('insertTab', data => {
+    insertOrSwitchTab(data)
   })
   eventHandler.on('deletePanel', data => {
     const panelId = data.panelId
@@ -173,28 +109,136 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
     const targetTab = layoutRef.current?.find(data.tabId || String(data.noteId))
     layoutRef.current?.updateTab(targetTab?.id, targetTab)
   })
-  const defaultEditor = useCallback((id: string, noteId?: number, title?: string, content?: Descendant[]): TabData => {
-    noteId = noteId || Id.getId()
-    return {
-      id,
-      onTabClick: e => {
-        eventEmitter.emit('editor', {
-          type: 'switchTab',
-          data: {
-            tabId: id
-          }
+  eventHandler.on('jumpToBlock', data => {
+    insertOrSwitchTab({
+      noteId: data.noteId,
+      isNew: false
+    }).then(() => {
+      selectedEditorRef.current?.jumpToBlock(data.blockId)
+    })
+  })
+  const insertOrSwitchTab = async data => {
+    const layout = layoutRef.current
+    if (layout) {
+      const id = data.id || Id.getStrId()
+      const panelId = data.panelId || layout.getGlobal().currentFocusedPanelId || layout.getLayout().dockbox.children[0].id
+
+      // we are adding a sub page,so we need to save the note first
+      if (data.parentNoteId) {
+        const subPageNote: INote = {
+          id: data.noteId,
+          parentNoteId: data.parentNoteId,
+          title: ''
+        }
+        return new Promise(() => {
+          saveNote(subPageNote)?.then(() => {
+            const editor = defaultEditor({
+              id,
+              noteId: subPageNote.id,
+              onInitialized: () => {
+                return Promise.resolve()
+              }
+            })
+            layout.dockMove(editor, panelId, 'middle')
+            eventEmitter.emit('editor', {
+              type: 'switchTab',
+              data: {
+                tabId: id
+              }
+            })
+          })
         })
-      },
-      title: <div>{title || 'Untitled'}</div>,
-      content: (
-        <div key={id} style={{ display: 'flex', height: '100%', paddingBottom: 30 }}>
-          <EditorV1 key={id} id={id} noteId={noteId} initialValue={content} />
-        </div>
-      ),
-      noteId,
-      cached: true
+      }
+      if (panelId) {
+        const noteId = data.noteId
+        if (noteId && !data.isNew) {
+          // maybe it has been opened
+          const mayBeTargetTab = layout.find(String(noteId)) as TabData | null
+          if (mayBeTargetTab) {
+            eventEmitter.emit('editor', {
+              type: 'switchTab',
+              data: {
+                tabId: mayBeTargetTab.id
+              }
+            })
+            return Promise.resolve()
+          }
+          const note = await getNoteById(noteId).catch(e => {
+            return null
+          })
+          if (note) {
+            return new Promise(resolve => {
+              const editor = defaultEditor({
+                id,
+                noteId,
+                title: note.title,
+                onInitialized: () => resolve(null)
+              })
+              layout.dockMove(editor, panelId, 'middle')
+              eventEmitter.emit('editor', {
+                type: 'switchTab',
+                data: {
+                  tabId: id
+                }
+              })
+            })
+          } else {
+            toast.error('Target note not found!')
+          }
+        }
+        return new Promise(resolve => {
+          const editor = defaultEditor({
+            id,
+            onInitialized: () => resolve(null)
+          })
+          layout.dockMove(editor, panelId, 'middle')
+          eventEmitter.emit('editor', {
+            type: 'switchTab',
+            data: {
+              tabId: id
+            }
+          })
+        })
+      }
     }
-  }, [])
+  }
+  const defaultEditor = useCallback(
+    ({
+      id,
+      noteId,
+      title,
+      content,
+      onInitialized
+    }: {
+      id: string
+      noteId?: number
+      title?: string
+      content?: string
+      onInitialized?: () => void
+    }): TabData => {
+      noteId = noteId || Id.getId()
+      return {
+        id,
+        onTabClick: e => {
+          eventEmitter.emit('editor', {
+            type: 'switchTab',
+            data: {
+              tabId: id
+            }
+          })
+        },
+        title: <div>{title || 'Untitled'}</div>,
+        content: (
+          <div key={id} style={{ display: 'flex', height: '100%', paddingBottom: 30 }}>
+            <EditorV1 key={id} onEditorInitialized={onInitialized} id={id} noteId={noteId} initialValue={content} />
+          </div>
+        ),
+        noteId,
+        cached: true
+      }
+    },
+    []
+  )
   const defaultLayout: LayoutData = useMemo(
     () => ({
       global: {
@@ -206,7 +250,7 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
         mode: 'horizontal',
         children: [
           {
-            tabs: [defaultEditor('1', firstNoteId)]
+            tabs: [defaultEditor({ id: '1', noteId: firstNoteId })]
           }
         ]
       }
@@ -214,9 +258,11 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
     []
   )
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
+    isEditorInitialized = true
     eventEmitter.addListener('editor', eventHandler)
     return () => {
+      isEditorInitialized = false
       eventEmitter.removeListener('editor', eventHandler)
     }
   }, [])

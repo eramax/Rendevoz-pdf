@@ -16,7 +16,8 @@
     ],
     "plugins": [
         "@typescript-eslint",
-        "eslint-plugin-react"
+        "eslint-plugin-react",
+        "@emotion"
     ],
     "rules": {
         "semi": ["error","never"],

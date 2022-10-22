@@ -47,6 +47,13 @@ export type OuterElementPropertyChangeEvent = ElementPropertyChangeEvent
 export type DeletePanelEvent = {
   panelId: string
 }
+export type JumpToBlockEvent = {
+  noteId: number
+  blockId: number
+}
+export interface SelectBlockEvent {
+  blockId: number
+}
 export interface EditorEventMap {
   insertNode: InsertNodeEvent
   foldHeading: FoldHeadingEvent
@@ -56,9 +63,11 @@ export interface EditorEventMap {
   compositionStart: Noop
   compositionEnd: Noop
   forceUpdate: Noop
+  selectBlock: SelectBlockEvent
   indicatorChange: IndicatorChangeEvent
   switchTab: SwitchTabEvent
   insertTab: InsertTabEvent
+  jumpToBlock: JumpToBlockEvent
   elementPropertyChange: ElementPropertyChangeEvent
   outerElementPropertyChange: OuterElementPropertyChangeEvent
   tabDataChange: TabDataChangeEvent

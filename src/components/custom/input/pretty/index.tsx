@@ -1,7 +1,5 @@
 import { useMount } from '@/hooks'
-import { Input } from 'antd'
-import TextArea from 'antd/lib/input/TextArea'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect, forwardRef } from 'react'
 import AutosizeTextarea from '../autosizeTextarea'
 import styles from './index.module.less'
 
@@ -16,23 +14,40 @@ interface Props {
   textarea?: boolean
   defaultValue?: string
   onClick?: React.MouseEventHandler<HTMLDivElement>
+  value?: string
 }
-export const PrettyInput: React.FC<Props> = props => {
-  const { onChange, displayText, className, type, textarea, defaultValue = '', onClick, defaultFocused = false } = props
+export const PrettyInput: React.FC<Props> = forwardRef((props, ref) => {
+  const {
+    onChange,
+    displayText,
+    className,
+    type,
+    textarea,
+    defaultValue = '',
+    onClick,
+    defaultFocused = false,
+    value: externalValue,
+    style
+  } = props
   const [small, setSmall] = useState(false)
   const [value, setValue] = useState(defaultValue)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>()
+  const isCompositionRef = useRef(false)
   const [focused, setFocused] = useState(defaultFocused)
   useMount(() => {
     if (defaultFocused) {
       inputRef.current?.focus()
     }
   })
+  useEffect(() => {
+    setValue(externalValue)
+  }, [externalValue])
   return (
     <div
+      ref={ref}
       onClick={onClick}
       tabIndex={props.tabIndex}
-      style={{ height: textarea ? 'auto' : '52px' }}
+      style={{ height: textarea ? 'auto' : '52px', ...style }}
       className={`${styles.LoginInput} ${className} ${focused ? `${styles.focused}` : undefined}`}
       onFocus={() => {
         setSmall(true)
@@ -57,9 +72,19 @@ export const PrettyInput: React.FC<Props> = props => {
           onBlur={() => {
             setFocused(false)
           }}
-          onChange={e => {
+          onCompositionStart={() => (isCompositionRef.current = true)}
+          onCompositionEnd={e => {
+            isCompositionRef.current = false
             onChange(e)
+          }}
+          onChange={e => {
+            const isComposition = isCompositionRef.current
             setValue(e.target.value)
+            if (isComposition) {
+              return
+            } else {
+              onChange(e)
+            }
           }}
         />
       ) : (
@@ -67,9 +92,19 @@ export const PrettyInput: React.FC<Props> = props => {
           spellCheck="false"
           type={type}
           value={value}
-          onChange={e => {
+          onCompositionStart={() => (isCompositionRef.current = true)}
+          onCompositionEnd={e => {
+            isCompositionRef.current = false
             onChange(e)
+          }}
+          onChange={e => {
+            const isComposition = isCompositionRef.current
             setValue(e.target.value)
+            if (isComposition) {
+              return
+            } else {
+              onChange(e)
+            }
           }}
           className={styles.Input}
           ref={inputRef}
@@ -89,4 +124,4 @@ export const PrettyInput: React.FC<Props> = props => {
       </div>
     </div>
   )
-}
+})

@@ -28,6 +28,7 @@ import TitleBar from './components/titlebar'
 import Initializer from './Initializer'
 import './global.less'
 enableMapSet()
+window.global = window
 const App = () => {
   return (
     <JotaiProvider scope={GlobalScope}>

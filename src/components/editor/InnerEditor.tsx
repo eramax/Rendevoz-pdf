@@ -4,7 +4,7 @@ import { useMemoizedFn } from '@/hooks'
 import { Position } from '@/types'
 import Id from '@/utils/id'
 import isHotkey from 'is-hotkey'
-import { FC, FormEventHandler, memo, useCallback, useRef } from 'react'
+import { FC, FormEventHandler, memo, useCallback, useEffect, useRef } from 'react'
 import { Descendant, Editor, Path, Range, Transforms, Element as SlateElement, Node } from 'slate'
 import { ReactEditor, Slate, Editable, RenderElementProps, RenderLeafProps } from 'slate-react'
 import { Content } from '../base'
@@ -26,6 +26,7 @@ import { getCaretGlobalPosition } from './utils/positions/caret'
 type InnerEditorProps = {
   editor: CustomEditor
   defaultValue: Descendant[]
+  onRendered: () => void
   onChange?: (value: Descendant[]) => void
   onTitleChange?: FormEventHandler<HTMLDivElement>
   onToggleMindmap: Noop
@@ -49,7 +50,8 @@ const InnerEditor: FC<InnerEditorProps> = memo(
     onChange,
     onTitleChange,
     onSave,
-    onAddSubPage
+    onAddSubPage,
+    onRendered
   }) => {
     const emitter = useEventEmitter()
     const renderInnerElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
@@ -60,12 +62,16 @@ const InnerEditor: FC<InnerEditorProps> = memo(
         caretPositionRef.current = getCaretGlobalPosition()
       }
     })
+    useEffect(() => {
+      onRendered?.()
+    }, [])
     const handleChange = useMemoizedFn((value: Descendant[]) => {
       onChange?.(value)
       if (getCaretGlobalPosition()) {
         caretPositionRef.current = getCaretGlobalPosition()
       }
     })
+
     const renderElement = useCallback(({ children, element, attributes }: RenderElementProps) => {
       if (element.type === 'columnList') {
         return (
@@ -120,6 +126,7 @@ const InnerEditor: FC<InnerEditorProps> = memo(
         return renderInnerElement({ children, element, attributes })
       }
     }, [])
+
     const handleKeydown = useMemoizedFn((e: KeyboardEvent) => {
       const { selection } = editor
       if (selection && Range.isCollapsed(selection)) {

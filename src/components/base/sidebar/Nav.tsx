@@ -1,5 +1,8 @@
 import Icon from '@/components/base/Icon'
+import SearchDialog from '@/components/dialogs/SearchDialog/SearchDialog'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
+import Modal from '../modal'
 import styles from './index.module.less'
 import { MenuItem } from './Item'
 
@@ -12,21 +15,35 @@ const variants = {
   }
 }
 const Navigation = () => {
+  const [searchVisible, setSearchVisible] = useState(false)
   return (
-    <motion.ul className={styles.list} variants={variants}>
-      <MenuItem to="/home">
-        <Icon name="park-home" style={{ marginRight: 10 }} />
-        Home
-      </MenuItem>
-      <MenuItem to="/editor">
-        <Icon name="park-editor" style={{ marginRight: 10 }} />
-        Editor
-      </MenuItem>
-      <MenuItem to="/collections">
-        <Icon name="park-document-folder" style={{ marginRight: 10 }} />
-        Collections
-      </MenuItem>
-    </motion.ul>
+    <>
+      <Modal visible={searchVisible} onClose={() => setSearchVisible(false)}>
+        <SearchDialog />
+      </Modal>
+      <motion.ul className={styles.list} variants={variants}>
+        <MenuItem to="/home">
+          <Icon name="park-home" style={{ marginRight: 10 }} />
+          Home
+        </MenuItem>
+        <MenuItem to="/editor">
+          <Icon name="park-editor" style={{ marginRight: 10 }} />
+          Editor
+        </MenuItem>
+        <MenuItem to="/collections">
+          <Icon name="park-document-folder" style={{ marginRight: 10 }} />
+          Collections
+        </MenuItem>
+        <MenuItem onClick={() => setSearchVisible(true)}>
+          <Icon name="park-search" style={{ marginRight: 10 }} />
+          Search
+        </MenuItem>
+        <MenuItem>
+          <Icon name="park-plus" style={{ marginRight: 10 }} />
+          New
+        </MenuItem>
+      </motion.ul>
+    </>
   )
 }
 

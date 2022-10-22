@@ -16,7 +16,6 @@ import { useSelectedEditorRef } from './hooks/useSelectedEditorRef'
 import InnerEditor from './InnerEditor'
 import withVoid from './plugins/withVoid'
 import styles from './index.module.less'
-import MindmapLayer from './MindmapLayer'
 import DragHandle from './components/dragHandle'
 import EditorOverlay from './components/overlay'
 import { Drawer } from 'antd'
@@ -54,8 +53,9 @@ const initial = [
     children: [{ text: '' }]
   }
 ]
+
 export interface EditorProps {
-  onEditorLoad?: (editor: ReactEditor) => void
+  onEditorInitialized?: () => void
   onChange?: (e: Descendant[]) => void
   onClick?: () => void
   initialValue?: Descendant[]
@@ -68,14 +68,20 @@ export interface IEditorRef {
   elementPropertyChange: (element: CustomElement) => void
   outerElementPropertyChange: (element: CustomElement) => void
   resetEditor: (value: Descendant[], title?: string) => void
+  jumpToBlock: (blockId: number) => void
   //   toggleMindMapLayer: Noop
 }
 
-export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick, initialValue, id, noteId }) => {
+export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, onClick, initialValue, id, noteId }) => {
   useUnMount(() => {
     doc.destroy()
     if (note === null) {
       provider.clearData()
+    } else {
+      const blocks = []
+      serializeEditor(editor, editor, blocks)
+      blocks.forEach(i => (i.noteId = noteId))
+      saveNoteAndBlocks(editor, blocks)
     }
   })
   const currentDraggingElementPath = useRef<Path>()
@@ -99,7 +105,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
   const emitter = useEventEmitter()
   const handler = new EditorEventHandler()
   const selectedRef = useSelectedEditorRef()
-  const { getNoteById, saveNote, findParentNotes, updateNote } = useNoteStore()
+  const { getNoteById, saveNote, findParentNotes, updateNote, saveNoteAndBlocks } = useNoteStore()
   const [note, setNote] = useState<INote | null>(null)
   const [currentDocument] = useCurrentDocument()
   const { updateDocument } = useDocumentStore()
@@ -128,7 +134,6 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
   useEffect(() => {
     findParentNotes(noteId).then(path => {
       setParentNotes(path)
-      console.log(path)
     })
   }, [findParentNotes])
   const { sharedType, doc, provider } = useMemo(() => {
@@ -161,7 +166,8 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
         insertNode: handleInsertNode,
         elementPropertyChange: handleElementPropertyChange,
         outerElementPropertyChange: handleOuterElementPropertyChange,
-        resetEditor: handleResetEditor
+        resetEditor: handleResetEditor,
+        jumpToBlock: handleJumpToBlock
       }
     }
   })
@@ -175,9 +181,13 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       insertNode: handleInsertNode,
       elementPropertyChange: handleElementPropertyChange,
       outerElementPropertyChange: handleOuterElementPropertyChange,
-      resetEditor: handleResetEditor
+      resetEditor: handleResetEditor,
+      jumpToBlock: handleJumpToBlock
     }
     return () => emitter.removeListener('editor', handler)
+  }, [])
+  useEffect(() => {
+    onEditorInitialized?.()
   }, [])
   const handleResetEditor = (value: Descendant[], title?: string) => {
     if (value) {
@@ -186,9 +196,21 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
     }
     setTitle(title)
   }
+  const handleJumpToBlock = (blockId: number) => {
+    emitter.emit(
+      'editor',
+      {
+        type: 'selectBlock',
+        data: {
+          blockId
+        }
+      },
+      true
+    )
+  }
+
   const handleInsertNode = (element: CustomElement) => {
     element.id = Id.getId()
-    console.log(element)
     if (element.type === 'emoji') {
       handleInsertEmoji(element)
     } else {
@@ -200,6 +222,9 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       }
     }
   }
+  const handleInnerRendered = useMemoizedFn(() => {
+    console.log('onner sad')
+  })
   const handleInsertEmoji = element => {
     const { selection } = editor
     const isCollapsed = selection && Range.isCollapsed(selection)
@@ -213,6 +238,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       Transforms.insertNodes(editor, ele)
     }
   }
+
   const handleElementPropertyChange = (element: CustomElement) => {
     if (element.id) {
       Transforms.setNodes(editor, element, {
@@ -383,6 +409,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       }
     }
   }
+
   const handleStartDragging = () => {
     setIsDragging(true)
     document.body.style.cursor = 'grabbing'
@@ -406,10 +433,12 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
     document.addEventListener('mousemove', handleDragging2)
     document.addEventListener('mouseup', handleEndDragging)
   }
+
   const startScroll = (direction: string) => {
     scrollDirectionRef.current = direction
     scroll()
   }
+
   const scroll = () => {
     if (scrollDirectionRef.current && wrapperRef.current) {
       const step = wrapperRef.current.scrollHeight / 500
@@ -423,10 +452,12 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       scrollFramerId.current = requestAnimationFrame(scroll)
     }
   }
+
   const endScroll = () => {
     cancelAnimationFrame(scrollFramerId.current)
     scrollDirectionRef.current = undefined
   }
+
   const handleDragging = useCallback((e: MouseEvent) => {
     const draggingLayer = draggingLayerRef.current
     const wrapper = wrapperRef.current
@@ -603,7 +634,9 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       }
     }
   }, [])
+
   const throttledHandleDragging = useRafFn(handleDragging)
+
   const handleDragging2 = useMemoizedFn((e: MouseEvent) => {
     try {
       throttledHandleDragging(e)
@@ -612,6 +645,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
     }
     e.preventDefault()
   })
+
   const handleEndDragging = useMemoizedFn(() => {
     document.body.style.cursor = 'auto'
     document.removeEventListener('mousemove', handleDragging2)
@@ -627,6 +661,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
     changeIndicator(null)
     endScroll()
   })
+
   const handleDividerDragEnd = useMemoizedFn(
     (previousColumnWidthRatio: number, previousColumnPath: Path, nextColumnWidthRatio: number, nextColumnPath: Path) => {
       setDragHandle(undefined)
@@ -651,9 +686,11 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       )
     }
   )
+
   const handleDividerDragStart = useMemoizedFn(() => {
     setIsDragging(true)
   })
+
   const handleMouseEnter = useMemoizedFn((e: MouseEvent, element) => {
     if (!isDragging && !overlayVisible) {
       currentDraggingRef.current = e.target as HTMLDivElement
@@ -668,12 +705,15 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       })
     }
   })
+
   const handleToggleMindmap = useMemoizedFn(() => {
     setMindmapVisible(!mindmapVisible)
   })
+
   const handleToggleOutline = useMemoizedFn(() => {
     setOutlineVisible(!outlineVisible)
   })
+
   const changeIndicator = (direction: string | null, id?: number) => {
     if (direction === null) {
       indicatorRef.current = undefined
@@ -695,15 +735,18 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       }
     })
   }
+
   const { run: debouncedChangeEditorValue } = useDebounceFn(
     value => {
       setEditorValue(value)
     },
     { wait: 300 }
   )
+
   const handleEditorValueChange = useMemoizedFn(value => {
     debouncedChangeEditorValue(value)
   })
+
   const handleTitleChange = useMemoizedFn((e: FormEvent<HTMLDivElement>) => {
     const text = e.currentTarget.textContent || 'Untitled'
     titleRef.current = text
@@ -733,6 +776,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       }
     })
   })
+
   const handleOpenSave = useMemoizedFn(() => {
     const title = titleRef.current
     if (note) {
@@ -745,6 +789,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       toast.error("Title can't be empty!")
     }
   })
+
   const handleSave = (confirm: boolean, collection: ICollection) => {
     toast.success('Note saved')
     setSaveNoteVisible(false)
@@ -785,6 +830,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
     })
     // saveNoteAndBlocks(editor, flattened, title)
   }
+
   const handleAddSubPage = useMemoizedFn(() => {
     if (note === null) {
       toast.error('You have to save current note before adding new sub page!')
@@ -810,6 +856,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
       })
     }
   })
+
   return (
     <div
       className={styles.Editor}
@@ -872,6 +919,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorLoad, onChange, onClick
             noteId={noteId}
             onTitleChange={handleTitleChange}
             editor={editor}
+            onRendered={handleInnerRendered}
             defaultValue={initial}
             onChange={handleEditorValueChange}
             onDividerDragEnd={handleDividerDragEnd}

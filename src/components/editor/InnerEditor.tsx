@@ -26,7 +26,8 @@ import { getCaretGlobalPosition } from './utils/positions/caret'
 type InnerEditorProps = {
   editor: CustomEditor
   defaultValue: Descendant[]
-  onRendered: () => void
+  scrollElement?: HTMLDivElement
+  onRendered?: () => void
   onChange?: (value: Descendant[]) => void
   onTitleChange?: FormEventHandler<HTMLDivElement>
   onToggleMindmap: Noop
@@ -51,7 +52,8 @@ const InnerEditor: FC<InnerEditorProps> = memo(
     onTitleChange,
     onSave,
     onAddSubPage,
-    onRendered
+    onRendered,
+    scrollElement
   }) => {
     const emitter = useEventEmitter()
     const renderInnerElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
@@ -72,60 +74,66 @@ const InnerEditor: FC<InnerEditorProps> = memo(
       }
     })
 
-    const renderElement = useCallback(({ children, element, attributes }: RenderElementProps) => {
-      if (element.type === 'columnList') {
-        return (
-          <Block
-            data-type="block"
-            key={element.id}
-            blockId={element.id}
-            data-spec-type="columnList"
-            id={String(element.id)}
-            type="columnList"
-            attributes={attributes}
-          >
-            {children}
-          </Block>
-        )
-      }
-      if (element.type === 'column') {
-        return (
-          <>
-            <Divider onDragStart={onDividerDragStart} onDragEnd={onDividerDragEnd} currentPath={ReactEditor.findPath(editor, element)} />
+    const renderElement = useCallback(
+      ({ children, element, attributes }: RenderElementProps) => {
+        if (element.type === 'columnList') {
+          return (
             <Block
-              data-type="column"
-              id={String(element.id)}
+              data-type="block"
               key={element.id}
               blockId={element.id}
-              ratio={element.ratio}
-              data-spec-type="column"
-              type="column"
+              data-spec-type="columnList"
+              id={String(element.id)}
+              type="columnList"
               attributes={attributes}
+              scrollElement={scrollElement}
             >
               {children}
             </Block>
-          </>
-        )
-      }
-      if (element.type !== 'spacer' && element.type !== 'highlight' && element.type !== 'emoji') {
-        return (
-          <Block
-            data-type="block"
-            blockId={element.id}
-            key={element.id}
-            id={String(element.id)}
-            element={element}
-            onMouseEnter={onBlockMouseEnter}
-            attributes={attributes}
-            type={element.type}
-          >
-            {renderInnerElement({ children, element, attributes })}
-          </Block>
-        )
-      } else {
-        return renderInnerElement({ children, element, attributes })
-      }
-    }, [])
+          )
+        }
+        if (element.type === 'column') {
+          return (
+            <>
+              <Divider onDragStart={onDividerDragStart} onDragEnd={onDividerDragEnd} currentPath={ReactEditor.findPath(editor, element)} />
+              <Block
+                data-type="column"
+                id={String(element.id)}
+                key={element.id}
+                blockId={element.id}
+                ratio={element.ratio}
+                data-spec-type="column"
+                type="column"
+                attributes={attributes}
+                scrollElement={scrollElement}
+              >
+                {children}
+              </Block>
+            </>
+          )
+        }
+        if (element.type !== 'spacer' && element.type !== 'highlight' && element.type !== 'emoji') {
+          return (
+            <Block
+              data-type="block"
+              blockId={element.id}
+              key={element.id}
+              id={String(element.id)}
+              element={element}
+              onMouseEnter={onBlockMouseEnter}
+              attributes={attributes}
+              type={element.type}
+              scrollElement={scrollElement}
+            >
+              {renderInnerElement({ children, element, attributes })}
+            </Block>
+          )
+        } else {
+          return renderInnerElement({ children, element, attributes })
+        }
+      },
+      [scrollElement]
+    )
 
     const handleKeydown = useMemoizedFn((e: KeyboardEvent) => {
       const { selection } = editor
@@ -212,6 +220,7 @@ const InnerEditor: FC<InnerEditorProps> = memo(
           </div>
         </Content>
         <Editable
+          onPaste={() => false}
           autoFocus
           spellCheck="false"
           onFocus={e => {

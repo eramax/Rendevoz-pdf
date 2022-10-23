@@ -1,4 +1,5 @@
-import { Content, Panel, TabPane, Tabs } from '@/components'
+import { Noop } from '@/common/types'
+import { Panel, TabPane, Tabs } from '@/components'
 import { isEditorInitialized } from '@/components/editor/EditorManager'
 import useEventEmitter from '@/events/useEventEmitter'
 import { useDebounceFn } from '@/hooks'
@@ -9,15 +10,13 @@ import { css } from '@emotion/css'
 import _ from 'lodash'
 import { FC, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { INote } from '~/typings/data'
 
 const SearchResult: FC<{
   queryString?: string
-}> = ({ queryString }) => {
+  onResultItemClick?: () => void
+}> = ({ queryString, onResultItemClick }) => {
   const [blocks, setBlocks] = useState([])
-  console.log(blocks)
   const { getBlocksByIds } = useBlockStore()
-  const { getNoteById } = useNoteStore()
   const { run: query } = useDebounceFn(
     s => {
       tokenize(s).then(strArray => {
@@ -42,13 +41,13 @@ const SearchResult: FC<{
           .map((v, k) => ({ id: k, blocks: v }))
           .value()
           .map(i => (
-            <NoteResultItem id={Number(i.id)} blocks={i.blocks} queryString={queryString} />
+            <NoteResultItem onClick={onResultItemClick} id={Number(i.id)} blocks={i.blocks} queryString={queryString} />
           ))}
       </TabPane>
     </Tabs>
   )
 }
-const NoteResultItem = ({ id, queryString, blocks }: { id: number; queryString: string; blocks: any[] }) => {
+const NoteResultItem = ({ id, queryString, blocks, onClick }: { id: number; queryString: string; blocks: any[]; onClick: Noop }) => {
   const { getNoteById } = useNoteStore()
   const [note, setNote] = useState()
   useEffect(() => {
@@ -69,12 +68,12 @@ const NoteResultItem = ({ id, queryString, blocks }: { id: number; queryString: 
       }
     >
       {blocks.map(i => (
-        <BlockResultItem key={i.id} id={i.id} block={i} queryString={queryString} />
+        <BlockResultItem onClick={onClick} key={i.id} id={i.id} block={i} queryString={queryString} />
       ))}
     </Panel>
   )
 }
-const BlockResultItem = ({ id, queryString, block }: { id: number; queryString: string; block: any }) => {
+const BlockResultItem = ({ id, queryString, block, onClick }: { id: number; queryString: string; block: any; onClick: Noop }) => {
   const emitter = useEventEmitter()
   const nav = useNavigate()
   const highlightedText = queryString.split(' ').reduce((prev, curr) => {
@@ -85,6 +84,7 @@ const BlockResultItem = ({ id, queryString, block }: { id: number; queryString: 
     }
   }, block?.plain)
   const handleClick = () => {
+    onClick?.()
     if (!isEditorInitialized) {
       nav(`/editor/${block.noteId}`)
     }

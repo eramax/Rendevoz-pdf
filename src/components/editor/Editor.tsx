@@ -915,6 +915,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
         />
         <div className={classNames(styles.InnerEditorWrapper, mindmapVisible && styles.MindmapVisible)}>
           <InnerEditor
+            scrollElement={wrapperRef.current}
             title={title}
             noteId={noteId}
             onTitleChange={handleTitleChange}

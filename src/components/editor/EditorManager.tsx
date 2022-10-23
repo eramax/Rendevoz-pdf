@@ -110,6 +110,7 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
     layoutRef.current?.updateTab(targetTab?.id, targetTab)
   })
   eventHandler.on('jumpToBlock', data => {
+    // wtf is this?
     insertOrSwitchTab({
       noteId: data.noteId,
       isNew: false

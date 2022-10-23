@@ -20,7 +20,7 @@ interface ModalProps {
 const Backdrop = ({ children, onMouseDown }) => {
   return (
     <motion.div
-      onClick={e => {e.stopPropagation();console.log(e)}}
+      role="backdrop"
       className={styles.backdrop}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -52,7 +52,9 @@ const Modal: FC<ModalProps> = ({ visible, onClose, children, minWidth, minHeight
             style={{ minWidth, minHeight, maxHeight, maxWidth, width, height }}
             className={styles.modal}
             onMouseDown={e => e.stopPropagation()}
-            onClick={e => {e.stopPropagation()}}
+            onClick={e => {
+              e.stopPropagation()
+            }}
             transition={{ stiffness: 200, damping: 20 }}
           >
             {children}

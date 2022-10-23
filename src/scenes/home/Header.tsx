@@ -28,24 +28,6 @@ const Header = () => {
   return (
     <Content className={styles.header} flex alignItems="center" justifyContent="space-between">
       <div className={styles.greeting}>Good {currentTime}, welcome back</div>
-      <Bar />
-    </Content>
-  )
-}
-const Bar = () => {
-  return (
-    <Content className={styles.bar} flex alignItems="center">
-      <div className={styles.plus}>
-        <IconWithPopover
-          name="park-plus"
-          placement={['left','bottom']}
-          content={
-            <WithBorder>
-              <NewDocumentMenu />
-            </WithBorder>
-          }
-        />
-      </div>
     </Content>
   )
 }

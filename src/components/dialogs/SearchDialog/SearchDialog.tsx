@@ -1,14 +1,16 @@
-import { AnimatePopover, Content } from '@/components/base'
-import { useDebounceFn } from '@/hooks'
-import { getAutoCompletes, getTokens, search as searchIndex, tokenize } from '@/utils/searchIndex'
+import { Noop } from '@/common/types'
+import { Content } from '@/components/base'
+import { getAutoCompletes, getTokens } from '@/utils/searchIndex'
 import { css } from '@emotion/css'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { PrettyInput } from '../../custom/input/pretty'
 import AutoCompleteList from './AutoComplete'
 import SearchResult from './Result'
 
-const SearchDialog = () => {
+interface SearchDialogProps {
+  onSearchComplete?: Noop
+}
+const SearchDialog: FC<SearchDialogProps> = ({ onSearchComplete }) => {
   const [autoCompletes, setAutoCompletes] = useState([])
   const [search, setSearch] = useState()
   const [autoCompleteVisible, setAutoCompleteVisible] = useState(false)
@@ -66,7 +68,7 @@ const SearchDialog = () => {
           )}
         </Content>
       </Content>
-      <SearchResult queryString={search} />
+      <SearchResult onResultItemClick={onSearchComplete} queryString={search} />
     </div>
   )
 }

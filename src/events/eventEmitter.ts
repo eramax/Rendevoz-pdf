@@ -39,6 +39,7 @@ export default class EventEmitter {
     this.listeners[name]?.forEach(handler => {
       handler.handle(data)
     })
+    // do we really need this?
     if (ack) {
       this.ackEvents.push({
         name,

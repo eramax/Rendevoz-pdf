@@ -72,11 +72,17 @@ export const Sidebar: FC = () => {
         }}
       >
         <nav
-          onMouseEnter={() => {
+          onMouseEnter={e => {
+            if (
+              e.nativeEvent.path.some(i => i.getAttribute && (i.getAttribute('role') === 'modal' || i.getAttribute('role') === 'backdrop'))
+            ) {
+              return
+            }
             if (!isResizing) setHovered(true)
           }}
           className={styles.nav}
           ref={navRef}
+          onClick={() => setHovered(false)}
         >
           <Navigation></Navigation>
         </nav>
@@ -84,6 +90,7 @@ export const Sidebar: FC = () => {
           <Icon
             name={collapsed ? 'park-right' : 'park-left'}
             size={20}
+            containerStyle={{ left: -5 }}
             fill="#8590ae"
             cursor="pointer"
             onClick={() => {

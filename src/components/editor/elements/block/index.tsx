@@ -1,26 +1,25 @@
 import { EditorEventHandler, IndicatorChangeEvent, SelectBlockEvent } from '@/events/editorEvent'
 import useEventEmitter from '@/events/useEventEmitter'
 import { useMemoizedFn } from '@/hooks'
-import { mergeRefs } from '@/hooks/utils/useMergedRef'
-import useWhyDidYouUpdate from '@/hooks/utils/useWhyUpdate'
 import classNames from 'classnames'
-import { FC, memo, useRef, useState, CSSProperties, useEffect, cloneElement, useMemo, useLayoutEffect } from 'react'
-import { RenderElementProps, useSelected } from 'slate-react'
+import { FC, memo, useRef, useState, CSSProperties, useEffect, cloneElement, useMemo } from 'react'
+import { RenderElementProps } from 'slate-react'
 import { CustomElement } from '../../customTypes'
 import { motion, AnimatePresence } from 'framer-motion'
 import styles from './index.module.less'
 import useClickOutside from '@/hooks/utils/useClickOutside'
+import { scrollToTarget } from '../../utils/positions/scroll'
 
 type BlockProps = {
   blockId: number
   type: string
   ratio?: number
-  isDragging?: boolean
   onMouseEnter?: (e: MouseEvent, element: CustomElement) => void
   element?: CustomElement
+  scrollElement?: HTMLDivElement
 }
 const Block: FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & BlockProps & RenderElementProps> = memo(
-  ({ isDragging, blockId, children, ratio, type, attributes, element, onMouseEnter, ...rest }) => {
+  ({ scrollElement, blockId, children, ratio, type, attributes, element, onMouseEnter, ...rest }) => {
     const blockRef = useRef<HTMLDivElement>(null)
     const columnRef = useRef<HTMLDivElement>(null)
     const emitter = useEventEmitter()
@@ -43,6 +42,10 @@ const Block: FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HT
     const handleSelectBlock = useMemoizedFn((data: SelectBlockEvent) => {
       if (data.blockId === blockId) {
         setSelected(true)
+        if (scrollElement) {
+          scrollToTarget(blockRef.current, scrollElement)
+          console.log('has scrol')
+        }
         emitter.removeAck(data.eventId)
       }
     })

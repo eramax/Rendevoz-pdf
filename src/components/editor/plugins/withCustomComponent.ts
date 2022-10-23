@@ -17,9 +17,13 @@ const checkIfSpacerNeeded = (element: Node) => {
   }
 }
 const withCustomComponent = (editor: CustomEditor) => {
-  const { deleteBackward, insertText, insertBreak, deleteForward, insertNode, insertFragment, apply } = editor
-
+  const { deleteBackward, insertText, insertBreak, deleteForward, insertNode, insertFragment, apply, normalizeNode } = editor
+  editor.normalizeNode = entry => {
+    console.log(entry)
+    normalizeNode(entry)
+  }
   editor.insertFragment = nodes => {
+    console.log('insert frag')
     nodes.forEach(i => (i.id = Id.getId()))
     insertFragment(nodes)
   }
@@ -38,8 +42,17 @@ const withCustomComponent = (editor: CustomEditor) => {
       }
     }
     if (Positions.isInsideCommonBlock(editor)) {
+      let finalInsertPath
       const nextRowPath = Positions.nextRowOfCurrentSelection(editor)
-      if (nextRowPath) {
+      const currPath = Path.previous(nextRowPath)
+      const currNode = Editor.node(editor, currPath)
+      const currElement = currNode[0]
+      if (Editor.isEmpty(editor, currElement)) {
+        finalInsertPath = currPath
+      } else {
+        finalInsertPath = nextRowPath
+      }
+      if (finalInsertPath) {
         const placeHolderParagraph: ParagraphElement = {
           type: 'paragraph',
           id: Id.getId(),
@@ -53,13 +66,13 @@ const withCustomComponent = (editor: CustomEditor) => {
               id: Id.getId(),
               children: [{ type: 'spacer', children: [{ text: '' }] }, node, { type: 'spacer', children: [{ text: '' }] }]
             },
-            { at: nextRowPath }
+            { at: finalInsertPath }
           )
         } else {
-          Transforms.insertNodes(editor, node, { at: nextRowPath })
+          Transforms.insertNodes(editor, node, { at: finalInsertPath })
         }
-        Transforms.select(editor, Editor.end(editor, nextRowPath))
-        const placeHolderPath = Path.next(nextRowPath)
+        Transforms.select(editor, Editor.end(editor, finalInsertPath))
+        const placeHolderPath = Path.next(finalInsertPath)
         const { children } = editor
         if (children.length === placeHolderPath[0]) {
           Transforms.insertNodes(editor, placeHolderParagraph, { at: placeHolderPath })
@@ -250,10 +263,11 @@ const withCustomComponent = (editor: CustomEditor) => {
     insertBreak()
   }
   editor.apply = op => {
+    console.log(op)
     const { emitter } = editor
     if (emitter) {
       if (op.type === 'remove_node' && op.node.type === 'subPage') {
-        emitter.emit('editor',{
+        emitter.emit('editor', {
           type: 'deleteSubPage',
           data: {
             subPageNoteId: op.node.originId

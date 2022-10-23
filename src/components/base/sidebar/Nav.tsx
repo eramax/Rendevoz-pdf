@@ -1,4 +1,5 @@
 import Icon from '@/components/base/Icon'
+import NewItemDialog from '@/components/dialogs/NewItemDialog'
 import SearchDialog from '@/components/dialogs/SearchDialog/SearchDialog'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -16,10 +17,14 @@ const variants = {
 }
 const Navigation = () => {
   const [searchVisible, setSearchVisible] = useState(false)
+  const [newItemVisible, setNewItemVisible] = useState(false)
   return (
     <>
       <Modal visible={searchVisible} onClose={() => setSearchVisible(false)}>
-        <SearchDialog />
+        <SearchDialog onSearchComplete={() => setSearchVisible(false)} />
+      </Modal>
+      <Modal visible={newItemVisible} onClose={() => setNewItemVisible(false)}>
+        <NewItemDialog />
       </Modal>
       <motion.ul className={styles.list} variants={variants}>
         <MenuItem to="/home">
@@ -38,7 +43,7 @@ const Navigation = () => {
           <Icon name="park-search" style={{ marginRight: 10 }} />
           Search
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => setNewItemVisible(true)}>
           <Icon name="park-plus" style={{ marginRight: 10 }} />
           New
         </MenuItem>

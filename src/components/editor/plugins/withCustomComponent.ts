@@ -17,13 +17,30 @@ const checkIfSpacerNeeded = (element: Node) => {
   }
 }
 const withCustomComponent = (editor: CustomEditor) => {
-  const { deleteBackward, insertText, insertBreak, deleteForward, insertNode, insertFragment, apply, normalizeNode } = editor
+  const {
+    deleteBackward,
+    insertText,
+    insertBreak,
+    deleteForward,
+    insertNode,
+    insertFragment,
+    apply,
+    normalizeNode,
+    insertData,
+    insertTextData
+  } = editor
+  editor.insertData = data => {
+    const d = data.getData('text/plain')
+    const html = data.getData('text/html')
+    const parsed = new DOMParser().parseFromString(html, 'text/html')
+    console.log(d, parsed)
+    return
+  }
   editor.normalizeNode = entry => {
     console.log(entry)
     normalizeNode(entry)
   }
   editor.insertFragment = nodes => {
-    console.log('insert frag')
     nodes.forEach(i => (i.id = Id.getId()))
     insertFragment(nodes)
   }

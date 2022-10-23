@@ -7,6 +7,7 @@ let initialized = false
 const loadJieba = () => {
   if (initialized) return Promise.resolve()
   else {
+    getTokens()
     return init().then(() => (initialized = true))
   }
 }

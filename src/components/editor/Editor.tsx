@@ -39,6 +39,7 @@ import withShortcuts from './plugins/withShortcuts'
 import withCustomComponent from './plugins/withCustomComponent'
 import { Breadcrumb, Content } from '../base'
 import withEmitter from './plugins/withEmitter'
+import withHtml from './plugins/withHtml'
 
 type DragHandleProps = {
   left: number
@@ -148,17 +149,15 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
     }
   })
   const editor = useMemo(() => {
-    if (sharedType) {
-      return withVoid(
+    return withVoid(
+      withHtml(
         withCustomComponent(
           withShortcuts(
             withEmitter(withHistory(withReact(withYHistory(withYjs(createEditor(), sharedType, { autoConnect: false })))), emitter)
           )
         )
       )
-    } else {
-      return withVoid(withCustomComponent(withCustomComponent(withHistory(withReact(createEditor())))))
-    }
+    )
   }, [sharedType])
   handler.on('switchTab', data => {
     if (data.tabId === id || data.noteId === noteId) {

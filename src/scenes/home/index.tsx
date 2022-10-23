@@ -1,19 +1,18 @@
 import Container from '@/components/base/container'
 import DocumentDetails from '@/components/documentDetail'
-import { FC, useCallback, useState } from 'react'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { RecentlyAddCard, RecentlyVisitCard } from './Card'
 import Header from './Header'
 import { AnimatePresence, motion, PanInfo, useDragControls } from 'framer-motion'
 import styles from './index.module.less'
 import { Content } from '@/components'
 import { useGlobalLocation } from '@/routes/globalLocation'
-import SearchDialog from '@/components/dialogs/SearchDialog/SearchDialog'
 
 export const HomePage: FC = () => {
   const location = useGlobalLocation()
   const homeBackground = location.state && location.state.homeBackground
-  console.log(location)
+
   return (
     <Container className={styles.home} auto column>
       <Header />

@@ -7,7 +7,7 @@ const EditorPage = () => {
   const {id} = useParams()
   const [searchParams] = useSearchParams()
   const documentId = searchParams.get('documentId')
-  console.log(id)
+
   return (
     <Content style={{ padding: 30, width: '80%', margin: 'auto', height: 'calc( 100% - 30px )' }} flex centered>
       <EditorManager documentId={parseInt(documentId)} initialNoteId={parseInt(id)} />

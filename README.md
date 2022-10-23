@@ -10,13 +10,15 @@ Editor featured with drag & drop,custom react component rendering...
 # How to use
 git clone -> npm install -> npm run dev / npm run build ( You know what to do )
 # Before using
-This is an alpha version. THERE WILL BE BREAKING CHANGES IN THE FUTURE. DON'T SAVE ANYTHING IMPORTANT!!!    
-And developer is a college student, if you have troubles he won't have enough time to help you!
+This is an alpha version.   
+THERE WILL BE BREAKING CHANGES IN THE FUTURE.     
+DON'T SAVE ANYTHING IMPORTANT!!!        
+And developer is a college student, if you have troubles he may not have enough time to help you (may well he is playing games / watching anime)!   
 # Contact me
 Email: yywz.hero@gmail.com
 # Built with
 React   
-Typescript
+Typescript    
 # Acknowledgement
 Thanks to the following open source projects.   
     

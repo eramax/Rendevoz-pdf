@@ -1,8 +1,9 @@
-# Rendevoz
-Rendevoz is an open-source knowledge management software.   
-    
-![QQ截图20221018163220](https://user-images.githubusercontent.com/30063889/196379782-160d2632-aef0-4a3e-8a35-1ca08382755b.png)    
-![QQ截图20221018165114](https://user-images.githubusercontent.com/30063889/196383800-db73886b-a7ae-4721-aca6-5d8d8736f114.png)
+<h1 align="center">Rendevoz</h1>
+<p align="center">Feel free of reading & noting.</p>
+<p>
+![GPLv3 License](https://img.shields.io/badge/License-AGPL-orange.svg)
+![Stars](https://img.shields.io/github/stars/RealRong/Rendevoz?style=social)
+</p>
 
 # Features
 Pdf viewer which you can do anything on it!   

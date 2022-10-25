@@ -1,4 +1,5 @@
 <h1 align="center">Rendevoz</h1>
+<<<<<<< HEAD
 <p align="center"><i>Feel free of reading & noting.</i></p>
 <img alt="intro" src="https://user-images.githubusercontent.com/30063889/197826377-d65fa30e-219c-45d7-87e1-431d5c153910.gif"/>
 <p align="center">
@@ -27,6 +28,13 @@ git clone -> npm install -> npm run dev
 Email: realrong2001@gmail.com
 
 > Developer is a college student so he may well be busy with ~playing games~ learning.
+=======
+<p align="center">Feel free of reading & noting.</p>
+<p>
+![GPLv3 License](https://img.shields.io/badge/License-AGPL-orange.svg)
+![Stars](https://img.shields.io/github/stars/RealRong/Rendevoz?style=social)
+</p>
+>>>>>>> 3e48b1b9230cf1cb8a80c3194064399315fffebe
 
 # Features
 

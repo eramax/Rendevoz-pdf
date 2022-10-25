@@ -1,24 +1,27 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import Backend from 'i18next-http-backend'
+import zhCN from '@/assets/locales/zh-CN/translation.json'
+import enUS from '@/assets/locales/en-US/translation.json'
 
 const initI18n = (defaultLang = 'en-US') => {
-  i18n
-    .use(Backend)
-    .use(initReactI18next)
-    .init({
-      interpolation: {
-        escapeValue: false
+  i18n.use(initReactI18next).init({
+    resources: {
+      'en-US': {
+        translation: enUS
       },
-      react: {
-        useSuspense: false
-      },
-      lng: defaultLang,
-      fallbackLng: defaultLang,
-      backend: {
-        loadPath: (lang: string) => `/locales/${lang}/translation.json`
+      'zh-CN': {
+        translation: zhCN
       }
-    })
+    },
+    interpolation: {
+      escapeValue: false
+    },
+    react: {
+      useSuspense: false
+    },
+    lng: defaultLang,
+    fallbackLng: defaultLang
+  })
   return i18n
 }
 export default initI18n

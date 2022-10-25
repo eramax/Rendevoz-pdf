@@ -22,7 +22,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "public/search-index.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 

@@ -14,7 +14,6 @@ const SettingDialog = () => {
       <Select
         closeOnSelect
         defaultValue={value || 'en-US'}
-        
         onSelect={v => {
           i18n.changeLanguage(v[0])
           setValue(v[0])

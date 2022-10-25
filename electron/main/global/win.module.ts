@@ -62,7 +62,7 @@ process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST_E
             nodeIntegration: false,
             contextIsolation: true,
             preload,
-            devTools: isDev
+            devTools: true
           },
           autoHideMenuBar: true,
           titleBarStyle: 'hidden'
@@ -100,9 +100,9 @@ process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST_E
           win.loadURL(url)
           // win.webContents.openDevTools()
         }
-        // win.webContents.openDevTools()
-        if (isDev) win.webContents.openDevTools()
-        else win.removeMenu()
+        win.webContents.openDevTools()
+        // if (isDev) win.webContents.openDevTools()
+        // else win.removeMenu()
 
         win.on('closed', () => {
           win.destroy()

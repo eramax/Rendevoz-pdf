@@ -17,18 +17,7 @@ const checkIfSpacerNeeded = (element: Node) => {
   }
 }
 const withCustomComponent = (editor: CustomEditor) => {
-  const {
-    deleteBackward,
-    insertText,
-    insertBreak,
-    deleteForward,
-    insertNode,
-    insertFragment,
-    apply,
-    normalizeNode,
-    insertData,
-    insertTextData
-  } = editor
+  const { deleteBackward, insertText, insertBreak, deleteForward, insertNode, insertFragment, apply, insertSoftBreak } = editor
   editor.insertData = data => {
     const d = data.getData('text/plain')
     const html = data.getData('text/html')
@@ -36,9 +25,8 @@ const withCustomComponent = (editor: CustomEditor) => {
     console.log(d, parsed)
     return
   }
-  editor.normalizeNode = entry => {
-    console.log(entry)
-    normalizeNode(entry)
+  editor.insertSoftBreak = () => {
+    editor.insertBreak()
   }
   editor.insertFragment = nodes => {
     nodes.forEach(i => (i.id = Id.getId()))
@@ -242,10 +230,15 @@ const withCustomComponent = (editor: CustomEditor) => {
   editor.insertBreak = () => {
     const { selection } = editor
     if (selection && Range.isCollapsed(selection)) {
-      if (Positions.isEndSpacer(editor)) {
+      if (Positions.isInsideHole(editor)) {
         const parentHoleBlock = Positions.parentBlock(editor)
         if (parentHoleBlock) {
-          const nextPath = Path.next(parentHoleBlock[1])
+          let insertBreakPath
+          if (Positions.isEndSpacer(editor)) {
+            insertBreakPath = Path.next(parentHoleBlock[1])
+          } else if (Positions.isStartSpacer(editor)) {
+            insertBreakPath = parentHoleBlock[1]
+          }
           Transforms.insertNodes(
             editor,
             {
@@ -253,11 +246,10 @@ const withCustomComponent = (editor: CustomEditor) => {
               id: Id.getId(),
               children: [{ text: '' }]
             },
-            { at: nextPath }
+            { at: insertBreakPath }
           )
-          Transforms.select(editor, nextPath)
+          Transforms.select(editor, insertBreakPath)
         }
-
         return
       }
       const match = Editor.above(editor, {

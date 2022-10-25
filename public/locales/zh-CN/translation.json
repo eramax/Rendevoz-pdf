@@ -1,0 +1,36 @@
+{
+    "home":{
+        "greeting": "欢迎回来",
+        "recently visit": "最近访问",
+        "recently add": "最近添加"
+    },
+    "sidebar":{
+        "home": "主页",
+        "editor": "编辑器",
+        "collections": "收藏夹",
+        "search": "搜索",
+        "new": "新建",
+        "setting": "设置"
+    },
+    "editor": {
+        "untitled": "未命名",
+        "save": "保存",
+        "redo": "重做",
+        "undo": "撤销",
+        "font color": "文字颜色",
+        "bold": "加粗",
+        "italic": "斜体",
+        "underline": "下划线",
+        "more": "更多",
+        "block elements": "块元素",
+        "inline elements": "行内元素",
+        "use emoji to express your ideas": "使用Emoji来表达想法吧！",
+        "sub page": "子页面",
+        "add sub page": "添加子页面",
+        "add new page": "添加新页面",
+        "open note in collections": "打开收藏夹内的笔记",
+        "close panel": "关闭面版",
+        "keyword": "关键词",
+        "use keyword to organize your ideas": "使用关键词来组织思路！"
+    }
+}

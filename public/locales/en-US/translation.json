@@ -1,0 +1,36 @@
+{
+    "home":{
+        "greeting": "Good {{time}}, welcome back",
+        "recently visit": "Recently visit",
+        "recently add": "Recently add"
+    },
+    "sidebar":{
+        "home": "Home",
+        "editor": "Editor",
+        "collections": "Collections",
+        "search": "Search",
+        "new": "New",
+        "setting": "Settings"
+    },
+    "editor": {
+        "untitled": "Untitled",
+        "save": "Save",
+        "redo": "Redo",
+        "undo": "Undo",
+        "font color": "Font color",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "more": "More",
+        "block elements": "Block elements",
+        "inline elements": "Inline elements",
+        "use emoji to express your ideas": "Use emoji to express your ideas!",
+        "sub page": "Sub page",
+        "add sub page": "Add sub page",
+        "add new page": "Add new page",
+        "open note in collections": "Open note in collections",
+        "close panel": "Close panel",
+        "keyword": "Keyword",
+        "use keyword to organize your ideas": "Use keywor to organize your ideas!"
+    }
+}

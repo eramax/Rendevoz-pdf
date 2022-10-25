@@ -22,6 +22,7 @@ import SubPage from './elements/subPage'
 import Thought from './elements/thought'
 import styles from './index.module.less'
 import { getCaretGlobalPosition } from './utils/positions/caret'
+import { useTranslation } from 'react-i18next'
 
 type InnerEditorProps = {
   editor: CustomEditor
@@ -56,6 +57,7 @@ const InnerEditor: FC<InnerEditorProps> = memo(
     scrollElement
   }) => {
     const emitter = useEventEmitter()
+    const { t } = useTranslation()
     const renderInnerElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
     const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, [])
     const caretPositionRef = useRef<Position>()
@@ -209,7 +211,7 @@ const InnerEditor: FC<InnerEditorProps> = memo(
             onInput={onTitleChange}
             spellCheck="false"
             className={styles.title}
-            placeholder="Untitled"
+            placeholder={t('editor.untitled')}
             contentEditable={true}
             style={{
               maxWidth: '100%',

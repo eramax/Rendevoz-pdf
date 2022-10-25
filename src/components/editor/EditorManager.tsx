@@ -1,20 +1,19 @@
 import './dock.less'
 import DockLayout, { DockContext, LayoutData, PanelData, TabData } from '../base/dock'
-import { cloneElement, FC, useCallback, useEffect, useMemo, useRef } from 'react'
+import { cloneElement, FC, useCallback, useMemo, useRef } from 'react'
 import EditorManagerMenu from '../menus/EditorManagerMenu'
 import { useSelectedEditorRef } from './hooks/useSelectedEditorRef'
 import useEventEmitter from '@/events/useEventEmitter'
 import { EditorEventHandler } from '../../events/editorEvent'
 import { EditorV1 } from './Editor'
 import useNoteStore from '@/stores/note.store'
-import { Descendant } from 'slate'
 import { Content, WithBorder } from '../base'
 import Id from '@/utils/id'
 import IconWithPopover from '../base/IconWithPopover'
 import toast from 'react-hot-toast'
 import { INote } from '~/typings/data'
-import { useIsomorphicLayoutEffect, useUnmount } from 'react-use'
-import { useMemoizedFn } from '@/hooks'
+import { useIsomorphicLayoutEffect } from 'react-use'
+import { useTranslation } from 'react-i18next'
 
 const EditorManagerMenuPopover = ({ panel = {} as PanelData, context = {} as DockContext }) => {
   const popoverRef = useRef()
@@ -51,6 +50,7 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
   const layoutRef = useRef<DockLayout>()
   const eventHandler = new EditorEventHandler()
   const firstNoteId = initialNoteId || Id.getId()
+  const { t } = useTranslation()
   const { saveNote, getNoteById, updateNote } = useNoteStore()
 
   eventHandler.on('foldHeading', data => {
@@ -82,9 +82,9 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
       .then(n => updateNote(n))
   })
   eventHandler.on('tabDataChange', data => {
-    const { id, noteId, tab } = data
+    const { id, tab } = data
     const oldTab = layoutRef.current?.find(id) as TabData
-    const newTitle = tab.title as string | undefined
+    const newTitle = tab.title === 'Untitled' || !tab.title ? t('editor.untitled') : tab.title
     tab.title = cloneElement(oldTab.title, {}, newTitle)
     const newTab = {
       ...oldTab,
@@ -228,7 +228,7 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
             }
           })
         },
-        title: <div>{title || 'Untitled'}</div>,
+        title: <div>{title === 'Untitled' || !title ? t('editor.untitled') : title}</div>,
         content: (
           <div key={id} style={{ display: 'flex', height: '100%', paddingBottom: 30 }}>
             <EditorV1 key={id} onEditorInitialized={onInitialized} id={id} noteId={noteId} initialValue={content} />
@@ -240,24 +240,21 @@ const EditorManager: FC<EditorManagerProps> = ({ initialNoteId, documentId, onSa
     },
     []
   )
-  const defaultLayout: LayoutData = useMemo(
-    () => ({
-      global: {
-        globalPanelExtra: (panel, context) => <EditorManagerMenuPopover panel={panel} context={context} />,
-        disableFloat: true,
-        disableSinglePanelMove: true
-      },
-      dockbox: {
-        mode: 'horizontal',
-        children: [
-          {
-            tabs: [defaultEditor({ id: '1', noteId: firstNoteId })]
-          }
-        ]
-      }
-    }),
-    []
-  )
+  const defaultLayout: LayoutData = {
+    global: {
+      globalPanelExtra: (panel, context) => <EditorManagerMenuPopover panel={panel} context={context} />,
+      disableFloat: true,
+      disableSinglePanelMove: true
+    },
+    dockbox: {
+      mode: 'horizontal',
+      children: [
+        {
+          tabs: [defaultEditor({ id: '1', noteId: firstNoteId, title: t('editor.untitled') })]
+        }
+      ]
+    }
+  }
 
   useIsomorphicLayoutEffect(() => {
     isEditorInitialized = true

@@ -40,6 +40,7 @@ import withCustomComponent from './plugins/withCustomComponent'
 import { Breadcrumb, Content } from '../base'
 import withEmitter from './plugins/withEmitter'
 import withHtml from './plugins/withHtml'
+import { useTranslation } from 'react-i18next'
 
 type DragHandleProps = {
   left: number
@@ -85,6 +86,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
       saveNoteAndBlocks(editor, blocks)
     }
   })
+  const { t } = useTranslation()
   const currentDraggingElementPath = useRef<Path>()
   const [isDragging, setIsDragging] = useIsDragging()
   const [outlineVisible, setOutlineVisible] = useState(false)
@@ -99,6 +101,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
   const currentDraggingRef = useRef<HTMLDivElement>()
   const draggingLayerRef = useRef<HTMLDivElement>()
   const blockElementsRef = useRef<Map<globalThis.Element, { left: number; top: number; height: number; width: number }>>(new Map())
+  const blockElementsArrayRef = useRef([])
   const [dragHandle, setDragHandle] = useState<DragHandleProps>()
   const indicatorRef = useRef<{ direction?: string; id?: number }>()
   const scrollDirectionRef = useRef<string>()
@@ -147,6 +150,8 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
     if (sharedType._length === 0) {
       sharedType.applyDelta(slateNodesToInsertDelta(initial))
     }
+    // avoid undo on synced
+    editor.history = { redos: [], undos: [] }
   })
   const editor = useMemo(() => {
     return withVoid(
@@ -222,12 +227,11 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
     }
   }
   const handleInnerRendered = useMemoizedFn(() => {
-    console.log('onner sad')
+    console.log('inner rendered (this is placeholder console)')
   })
   const handleInsertEmoji = element => {
     const { selection } = editor
     const isCollapsed = selection && Range.isCollapsed(selection)
-    console.log(selection)
     const ele = {
       type: element.type,
       name: element.name,
@@ -270,7 +274,6 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
       // 1.drag to insert
       // 2.drag to reorder
       const currPath = currentDraggingElementPath.current
-      console.log(currPath, targetPath)
       // i don't know what is happening here,but it seems to be working...
       const currParentElement = Editor.node(editor, Path.parent(currPath))
       if (direction === 'top' || direction === 'bottom') {
@@ -411,6 +414,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
 
   const handleStartDragging = () => {
     setIsDragging(true)
+    blockElementsArrayRef.current = []
     document.body.style.cursor = 'grabbing'
     const wrapper = wrapperRef.current
     if (!wrapper) {
@@ -422,6 +426,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
       .forEach(i => {
         const { left, top, width, height } = i.getBoundingClientRect()
         const distance = getDistanceBetweenPointAndScrollableElement({ x: left, y: top }, wrapper)
+        blockElementsArrayRef.current.push(i)
         blockElementsRef.current.set(i, {
           left: distance.left,
           top: distance.top,
@@ -493,6 +498,19 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
     const distanceToWrapper = getDistanceBetweenPointAndScrollableElement({ x: e.clientX, y: e.clientY }, wrapper)
     const currentBlock = searchBlock(Array.from(blockElementsRef.current.entries()), distanceToWrapper.top)
     if (currentBlock === -1) {
+      // right now we need to check if dragging over the toppest / bottomest
+      const firstBlock = blockElementsArrayRef.current[0]
+      const lastBlock = blockElementsArrayRef.current[blockElementsArrayRef.current.length - 1]
+      const distanceToFirstBlock = getDistanceBetweenPointAndElement(e, firstBlock)
+      const distanceToLastBlock = getDistanceBetweenPointAndElement(e, lastBlock)
+      if (distanceToFirstBlock.top < 0 && distanceToFirstBlock.left > 0 && distanceToFirstBlock.right > 0) {
+        changeIndicator('top', getElementId(firstBlock))
+        return
+      }
+      if (distanceToLastBlock.bottom < 0 && distanceToLastBlock.left > 0 && distanceToLastBlock.right > 0) {
+        changeIndicator('bottom', getElementId(lastBlock))
+        return
+      }
       return
     }
     const currentBlockId = getElementId(currentBlock)
@@ -502,6 +520,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
 
     // right now dragging over column list,we do not determine the top / bottom direction of column list
     if (currentBlock?.getAttribute('data-spec-type') === 'columnList') {
+      console.log('yes')
       const columns = currentBlock.querySelectorAll(`[data-spec-type="column"]`)
       // check if dragging over the right blank space
       const lastColumn = Array.from(columns).pop()
@@ -692,10 +711,10 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
 
   const handleMouseEnter = useMemoizedFn((e: MouseEvent, element) => {
     if (!isDragging && !overlayVisible) {
-      currentDraggingRef.current = e.target as HTMLDivElement
+      currentDraggingRef.current = e.currentTarget as HTMLDivElement
       currentDraggingElementPath.current = ReactEditor.findPath(editor, element)
       const rect = wrapperRef.current?.getBoundingClientRect()
-      const targetRect = e.target.getBoundingClientRect()
+      const targetRect = e.currentTarget.getBoundingClientRect()
       setDragHandle({
         left: targetRect.x - rect?.x,
         top: targetRect.y - rect?.y + wrapperRef.current?.scrollTop,
@@ -887,7 +906,7 @@ export const EditorV1: FC<EditorProps> = memo(({ onEditorInitialized, onChange, 
                 }}
                 type="button"
               >
-                {i.title || 'Untitled'}
+                {i.title || t('editor.untitled')}
               </Breadcrumb.Item>
             ))}
           </Breadcrumb>

@@ -1,6 +1,6 @@
 import { EditorEventHandler, IndicatorChangeEvent, SelectBlockEvent } from '@/events/editorEvent'
 import useEventEmitter from '@/events/useEventEmitter'
-import { useMemoizedFn } from '@/hooks'
+import { useMemoizedFn, useMergedRef } from '@/hooks'
 import classNames from 'classnames'
 import { FC, memo, useRef, useState, CSSProperties, useEffect, cloneElement, useMemo } from 'react'
 import { RenderElementProps } from 'slate-react'
@@ -22,6 +22,7 @@ const Block: FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HT
   ({ scrollElement, blockId, children, ratio, type, attributes, element, onMouseEnter, ...rest }) => {
     const blockRef = useRef<HTMLDivElement>(null)
     const columnRef = useRef<HTMLDivElement>(null)
+    const mergedChildrenRef = useMergedRef(blockRef, attributes.ref)
     const emitter = useEventEmitter()
     const handler = useMemo(() => new EditorEventHandler(), [])
 
@@ -84,13 +85,14 @@ const Block: FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HT
       }
     }, [ratio])
     const handleMouseEnter = (e: MouseEvent) => {
+      console.log(element)
       onMouseEnter?.(e, element)
     }
     const renderChildren = () => (
       <div
         key={blockId}
         {...attributes}
-        ref={blockRef}
+        ref={mergedChildrenRef}
         onMouseEnter={handleMouseEnter}
         {...rest}
         className={classNames(
@@ -119,7 +121,7 @@ const Block: FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HT
     )
     return type === 'column'
       ? cloneElement(
-          <motion.div layout="position"></motion.div>,
+          <div></div>,
           {
             ref: columnRef,
             style: {

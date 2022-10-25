@@ -13,3 +13,8 @@ export interface NoteBlock {
   version: number
   subBlockIds?: number[]
 }
+
+export interface Keyword {
+  word: string
+  description: string
+}

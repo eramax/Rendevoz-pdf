@@ -1,10 +1,10 @@
-import { Content, Icon, WithBorder } from '@/components'
-import IconWithPopover from '@/components/base/IconWithPopover'
-import NewDocumentMenu from '@/components/menus/NewDocumentMenu'
+import { Content } from '@/components'
 import { getHours } from 'date-fns'
 import styles from './index.module.less'
+import { useTranslation } from 'react-i18next'
 
 const Header = () => {
+  const { t } = useTranslation()
   const currentHour = getHours(new Date())
   let currentTime
   if (currentHour >= 1 && currentHour < 11) {
@@ -27,7 +27,7 @@ const Header = () => {
   }
   return (
     <Content className={styles.header} flex alignItems="center" justifyContent="space-between">
-      <div className={styles.greeting}>Good {currentTime}, welcome back</div>
+      <div className={styles.greeting}>{t('home.greeting', { time: currentTime })}</div>
     </Content>
   )
 }

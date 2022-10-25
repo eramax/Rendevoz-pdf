@@ -6,10 +6,10 @@ import { IPdfDocument } from '~/typings/data'
 import styles from './index.module.less'
 import { format } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useMeasure, useWindowSize } from 'react-use'
+import { useMeasure } from 'react-use'
 import FullSizeLink from '@/components/base/FullSizeLink'
 import { useLocation } from 'react-router-dom'
-
+import { useTranslation } from 'react-i18next'
 interface CardProps {
   title: string
   children: ReactNode
@@ -34,8 +34,9 @@ export const RecentlyVisitCard = memo(() => {
   const { recentlyRead } = useDocumentStore()
   const [ref, { width }] = useMeasure()
   const count = Math.floor(width / 300)
+  const { t } = useTranslation()
   return (
-    <Card title="Recently visit">
+    <Card title={t('home.recently visit')}>
       <Content
         ref={ref}
         style={{
@@ -162,8 +163,9 @@ export const RecentlyAddCard = memo(() => {
   const { recentlyCreated } = useDocumentStore()
   const [ref, { width }] = useMeasure()
   const count = Math.floor(width / 300)
+  const { t } = useTranslation()
   return (
-    <Card title="Recently add">
+    <Card title={t('home.recently add')}>
       <Content
         ref={ref}
         style={{

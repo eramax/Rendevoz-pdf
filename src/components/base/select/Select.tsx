@@ -105,6 +105,7 @@ const Select: ISelect = ({ disabled, multiple, children, closeOnSelect, onSelect
       positions={['bottom']}
       onClickOutside={() => setMenuVisible(false)}
       padding={10}
+      containerStyle={{ zIndex: '10000' }}
       content={
         <WithBorder style={{ padding: '8px 0px' }} borderRadius={5}>
           <SelectMenu

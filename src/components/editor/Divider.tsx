@@ -16,6 +16,7 @@ const Divider: FC<DividerProps> = ({ onDragEnd, onDragStart, currentPath }) => {
   const dividerRef = useRef<HTMLDivElement>(null)
   const widthRef = useRef(null)
   const [isDraggingHandle, setIsDraggingHandle] = useState(false)
+  const [isMouseOnDivider,setIsMouseOnDivider] = useState(true)
   const prevPrevColumnAnim = useRef()
   const prevNextColumnAnim = useRef()
   const handleDragStart = (e: MouseEvent) => {
@@ -64,6 +65,11 @@ const Divider: FC<DividerProps> = ({ onDragEnd, onDragStart, currentPath }) => {
     setIsDraggingHandle(false)
     const divider = dividerRef.current
     if (divider) {
+      if (!divider.contains(e.target)) {
+        setIsMouseOnDivider(false)
+      }else{
+        setIsMouseOnDivider(true)
+      }
       const previousColumn = divider.previousElementSibling as HTMLElement
       const previousColumnWidth = previousColumn.clientWidth
       const nextColumn = divider.nextElementSibling as HTMLElement
@@ -87,7 +93,8 @@ const Divider: FC<DividerProps> = ({ onDragEnd, onDragStart, currentPath }) => {
         onDragStart={handleDragStart}
         onDrag={handleDrag}
         ref={dividerRef}
-        whileHover={{ opacity: 1, cursor: 'col-resize' }}
+        onMouseEnter={() => setIsMouseOnDivider(true)}
+        whileHover={{ opacity: isMouseOnDivider ? 1 : 0, cursor: 'col-resize' }}
         style={{ opacity: isDraggingHandle ? 1 : undefined, pointerEvents: isDraggingHandle ? 'all' : isDragging ? 'none' : undefined }}
         contentEditable={false}
         className={classNames(styles.DividerWrapper)}

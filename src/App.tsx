@@ -15,20 +15,17 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import { Provider as JotaiProvider } from 'jotai'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Routes from './routes'
 import { GlobalScope } from './jotai/jotaiScope'
-import { enableMapSet } from 'immer'
 import '@icon-park/react/styles/index.less'
 import './common.less'
 import { Toaster } from 'react-hot-toast'
 import TitleBar from './components/titlebar'
 import Initializer from './Initializer'
 import './global.less'
-enableMapSet()
-window.global = window
+
 const App = () => {
   return (
     <JotaiProvider scope={GlobalScope}>

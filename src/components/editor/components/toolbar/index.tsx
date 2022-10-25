@@ -4,13 +4,11 @@ import { Content, Toolbar, WithBorder } from '@/components/base'
 import Select from '@/components/base/select'
 import Menu from '@/components/base/menu'
 import IconWithPopover from '@/components/base/IconWithPopover'
-import EmojiPicker from '@/components/picker/emojiPicker'
-import getEmoji from '@/utils/emoji'
-import { CSSProperties, FC, useEffect, useRef, useState } from 'react'
-import { Editor, Range } from 'slate'
+import { CSSProperties, FC, useRef } from 'react'
+import { Editor } from 'slate'
 import { useSlate } from 'slate-react'
 import styles from './index.module.less'
-import Tooltip from '@/components/base/Tooltip'
+import { useTranslation } from 'react-i18next'
 
 interface EditorToolbarProps {
   fontSize?: number
@@ -44,6 +42,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
   onAddSubPage,
   style
 }) => {
+  const { t } = useTranslation()
   const editor = useSlate()
   const { selection } = editor
   const currentElement = selection ? Editor.node(editor, selection?.anchor?.path, { depth: 1 }) : null
@@ -66,9 +65,9 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
       <Toolbar className={styles.toolbar} style={style} itemClickPreventDefault itemSize={16}>
         {/* <Toolbar.Item iconName="park-mindmap-list" onClick={onToggleOutline} />
         <Toolbar.Item iconName="park-mindmap-map" onClick={onToggleMindmap} /> */}
-        <Toolbar.Item tooltip="Save" iconName="park-save" onClick={onSave} />
-        <Toolbar.Item tooltip="Undo" iconName="park-return" onClick={onUndo} />
-        <Toolbar.Item tooltip="Redo" iconName="park-go-on" onClick={onRedo} />
+        <Toolbar.Item tooltip={t('editor.save')} iconName="park-save" onClick={onSave} />
+        <Toolbar.Item tooltip={t('editor.undo')} iconName="park-return" onClick={onUndo} />
+        <Toolbar.Item tooltip={t('editor.redo')} iconName="park-go-on" onClick={onRedo} />
         <Select
           closeOnSelect
           disabled={
@@ -95,7 +94,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
         </Select>
         <Toolbar.Item>
           <IconWithPopover
-            tooltip="Font color"
+            tooltip={t('editor.font color')}
             placement={['bottom']}
             size={16}
             name="park-font-size-two"
@@ -107,20 +106,25 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
             }
           ></IconWithPopover>
         </Toolbar.Item>
-        <Toolbar.Item tooltip="Bold" isActive={isMarkActive('bold')} iconName="park-text-bold" onClick={onBold} />
-        <Toolbar.Item tooltip="Italic" isActive={isMarkActive('italic')} iconName="park-text-italic" onClick={onItalic} />
-        <Toolbar.Item tooltip="Underline" isActive={isMarkActive('underline')} iconName="park-text-underline" onClick={onUnderline} />
+        <Toolbar.Item tooltip={t('editor.bold')} isActive={isMarkActive('bold')} iconName="park-text-bold" onClick={onBold} />
+        <Toolbar.Item tooltip={t('editor.italic')} isActive={isMarkActive('italic')} iconName="park-text-italic" onClick={onItalic} />
+        <Toolbar.Item
+          tooltip={t('editor.underline')}
+          isActive={isMarkActive('underline')}
+          iconName="park-text-underline"
+          onClick={onUnderline}
+        />
         <Toolbar.Item>
           <IconWithPopover
             innerRef={morePopoverRef}
             disableIntersection
-            tooltip="More"
+            tooltip={t('editor.more')}
             name="park-more"
             placement={['bottom']}
             content={
               <WithBorder style={{ padding: '8px 0px' }}>
                 <Menu>
-                  <Menu.Group title="Inline Elements">
+                  <Menu.Group title={t('editor.inline elements')}>
                     <Menu.Item
                       type="button"
                       onClick={e => {
@@ -131,7 +135,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
                     >
                       <IconWithDescription
                         title="Emoji"
-                        description="Use emoji to express your ideas"
+                        description={t('editor.use emoji to express your ideas')}
                         icon="park-message-emoji"
                       ></IconWithDescription>
                     </Menu.Item>
@@ -139,7 +143,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
                       <IconWithDescription title="Link" description="Link to external pages" icon="park-link-one"></IconWithDescription>
                     </Menu.Item> */}
                   </Menu.Group>
-                  <Menu.Group title="Block Elements">
+                  <Menu.Group title={t('editor.block elements')}>
                     <Menu.Item
                       type="button"
                       onClick={e => {
@@ -148,8 +152,26 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
                         morePopoverRef.current?.close()
                       }}
                     >
-                      <IconWithDescription title="Page" description="Add sub-page" icon="park-doc-detail"></IconWithDescription>
+                      <IconWithDescription
+                        title={t('editor.sub page')}
+                        description={t('editor.add sub page')}
+                        icon="park-doc-detail"
+                      ></IconWithDescription>
                     </Menu.Item>
+                    {/* <Menu.Item
+                      type="button"
+                      onClick={e => {
+                        e.stopPropagation()
+
+                        morePopoverRef.current?.close()
+                      }}
+                    >
+                      <IconWithDescription
+                        title={t('editor.keyword')}
+                        description={t('editor.use keyword to organize your ideas')}
+                        icon="park-key"
+                      ></IconWithDescription>
+                    </Menu.Item> */}
                   </Menu.Group>
                 </Menu>
               </WithBorder>

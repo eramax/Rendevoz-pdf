@@ -346,16 +346,6 @@ export function removeFromLayout(layout: LayoutData, source: TabData | PanelData
       panelData = source.parent
       layout = removeTab(layout, source)
     }
-    if (panelData && panelData.parent && panelData.parent.mode === 'maximize') {
-      const newPanel = layout.maxbox.children[0] as PanelData
-      if (!newPanel || (newPanel.tabs.length === 0 && !newPanel.panelLock)) {
-        // max panel is gone, remove the place holder
-        const placeHolder = find(layout, maximePlaceHolderId) as PanelData
-        if (placeHolder) {
-          return removePanel(layout, placeHolder)
-        }
-      }
-    }
   }
   return layout
 }
@@ -631,7 +621,7 @@ export function fixLayoutData(layout: LayoutData, groups?: { [key: string]: TabG
         fixPanelData(child)
         if (child.tabs.length === 0) {
           // remove panel with no tab
-          if (!child.panelLock) {
+          if (box.children.length >= 2) {
             box.children.splice(i, 1)
             --i
           } else if (child.group === placeHolderStyle && (box.children.length > 1 || box.parent)) {
@@ -719,9 +709,6 @@ export function fixLayoutData(layout: LayoutData, groups?: { [key: string]: TabG
     }
   }
   layout.dockbox.parent = null
-  layout.floatbox.parent = null
-  layout.windowbox.parent = null
-  layout.maxbox.parent = null
   clearObjectCache()
   return layout
 }
@@ -759,12 +746,6 @@ function replaceBox(layout: LayoutData, box: BoxData, newBox: BoxData): LayoutDa
   } else {
     if (box.id === layout.dockbox.id || box === layout.dockbox) {
       return { ...layout, dockbox: newBox }
-    } else if (box.id === layout.floatbox.id || box === layout.floatbox) {
-      return { ...layout, floatbox: newBox }
-    } else if (box.id === layout.windowbox.id || box === layout.windowbox) {
-      return { ...layout, windowbox: newBox }
-    } else if (box.id === layout.maxbox.id || box === layout.maxbox) {
-      return { ...layout, maxbox: newBox }
     }
   }
   return layout

@@ -7,9 +7,11 @@ import MenuItem from '../base/menu/MenuItem'
 import Modal from '../base/modal'
 import Icon from '../base/Icon'
 import TreeCollectionRoot from '../treeCollection'
+import { useTranslation } from 'react-i18next'
 
 const EditorManagerMenu = ({ panel = {} as PanelData, context = {} as DockContext, onClose }) => {
   const emitter = useEventEmitter()
+  const { t } = useTranslation()
   const [v, toggle] = useToggle(false)
   return (
     <>
@@ -43,7 +45,7 @@ const EditorManagerMenu = ({ panel = {} as PanelData, context = {} as DockContex
             })
           }}
         >
-          New page
+          {t('editor.add new page')}
         </MenuItem>
         <MenuItem
           icon={<Icon name="park-folder-open" size={14} />}
@@ -52,7 +54,7 @@ const EditorManagerMenu = ({ panel = {} as PanelData, context = {} as DockContex
             toggle()
           }}
         >
-          Open note in collections
+          {t('editor.open note in collections')}
         </MenuItem>
         {/* <MenuItem type="button">Search note</MenuItem> */}
         <Menu.Item
@@ -67,7 +69,7 @@ const EditorManagerMenu = ({ panel = {} as PanelData, context = {} as DockContex
             })
           }}
         >
-          Close panel
+          {t('editor.close panel')}
         </Menu.Item>
       </Menu>
     </>
